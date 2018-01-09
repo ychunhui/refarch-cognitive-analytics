@@ -1,0 +1,18 @@
+{
+    "conversation" :{
+      "version" : "v1",
+      "versionDate":"2017-05-26",
+      "username":"291d9397-073f-46d9-b0d2-11b54e6ae533",
+      "password":"aDFBIIPYkQlD",
+      "conversationId":"Complex Relocation",
+      "workspace":"a97a02e3-d3c3-48de-8e64-20502819e582",
+      "usePersistence": false
+    },
+    "customerAPI":{
+        "url":"http://customer.green.case/caseserv/api/v1",
+        "host":"customer.green.case"
+    },
+    "debug":true,
+    "port": 3001,
+    "version": "v0.0.1"
+}
