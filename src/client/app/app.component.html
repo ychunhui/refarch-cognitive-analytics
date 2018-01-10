@@ -5,11 +5,10 @@ from the routing mechanism -->
   <div class="header clearfix">
     <nav>
       <ul class="nav nav-pills pull-right">
-        <li role="presentation" class="active"><a href="#">Home</a></li>
-        <li role="presentation"><a href="#">Support</a></li>
+        <li role="presentation" *ngIf="user"><a (click)="logout()">Logout</a></li>
       </ul>
     </nav>
-    <h3 class="text-muted">Green Telco Portal</h3>
+    <h3 class="text-muted" (click)="home()">Green Telco Portal</h3>
   </div>
 
   <router-outlet></router-outlet>
