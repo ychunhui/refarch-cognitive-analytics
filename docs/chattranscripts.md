@@ -1,6 +1,8 @@
 # Persisting the chat transcripts
 To persist the conversation content, we selected a document oriented database running on IBM Cloud, public offering. The Web application can persist the conversation interactions in a single document. The control is done with the parameter `conversation.usePersistence` in the `config.json` under the `server/config` folder.
 
+## Pre-requisite
+
 ## Create a Cloudant Service in IBM Cloud  
 
 ## Create a Database: wcsdb
