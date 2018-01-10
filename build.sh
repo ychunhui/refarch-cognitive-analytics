@@ -2,19 +2,23 @@
 # Program to modify the version number for the different element and compile
 
 # Get default version if the version is not the first argument
+prev=$(grep -o 'v\([0-9]\+.\)\{2\}\([0-9]\+\)' src/client/app/app.component.ts)
+
 if [[ $# -gt 0 ]]; then
 	v=v$1
 else
-	v="v0.0.1"
+  v=$prev
 fi
 echo $v
 
 cd src
-# TODO add a sed or awk to modify the version in the client considerations
-sed -i -e 's/"v0.0.1"/$v/g' client/app/app.component.ts
 
-# TODO modify version for server
-sed -i -e 's/"v0.0.1"/$v/g' server/config/config.json
+# Update client version
+sed -i '' -e s/$prev/$v/g client/app/app.component.ts
+
+# Update server version
+sed -i '' -e s/$prev/$v/g server/config/config.json
+
 # Compile Angular
 ng build
 # Build docker
