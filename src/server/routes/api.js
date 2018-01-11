@@ -41,6 +41,9 @@ module.exports = function(app,config){
   });
 
 
+  app.get('/api/cust/customers/email/:email',isLoggedIn, (req,res) => {
+    customer.getCustomerByEmail(config,req,res);
+  })
 
   app.get('/api/cust/customers', isLoggedIn,(req,res) => {
     customer.getCustomers(config,req,res);

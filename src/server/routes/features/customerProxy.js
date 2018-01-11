@@ -30,7 +30,7 @@ var buildOptions=function(met,aPath,config){
     headers: {
       accept: 'application/json',
       'Content-Type': 'application/json',
-      Host: config.customerAPI.host(),
+      Host: config.customerAPI.host,
     }
   }
 }
@@ -53,6 +53,11 @@ var processRequest = function(res,opts) {
 module.exports = {
   getCustomer : function(config,req,res){
     var opts = buildOptions('GET','/customers/'+req.params.id,config);
+    opts.headers['Content-Type']='multipart/form-data';
+    processRequest(res,opts);
+  },
+  getCustomerByEmail : function(config,req,res){
+    var opts = buildOptions('GET','/customers/email/'+req.params.email,config);
     opts.headers['Content-Type']='multipart/form-data';
     processRequest(res,opts);
   },

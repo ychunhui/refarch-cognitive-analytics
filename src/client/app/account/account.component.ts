@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CustomersService }  from '../customer/customers.service';
 import { Customer } from "../customer/Customer";
+import { User } from "../login/User";
 
 @Component({
   selector: 'app-account',
@@ -9,40 +10,22 @@ import { Customer } from "../customer/Customer";
 })
 export class AccountComponent implements OnInit {
 
-  customer: Customer = {
-      "firstName": "Bob",
-      "lastName": "Builder",
-      "emailAddress": "bobbuilder@email.com",
-      "age": 24,
-      "profession": "Engineer",
-      "gender": "M",
-      "children": 1,
-      "estimatedIncome": 40000,
-      "carOwner": "N",
-      "id": 1,
-      "name": "Bob Builder",
-      "type": "Person",
-      "status": "S",
-      "accountNumber": "ACT01",
-      "longDistance": 25,
-      "longDistanceBillType": "Standard",
-      "international": 0,
-      "local": 206,
-      "balance": 150,
-      "usage": 231,
-      "dropped": 0,
-      "paymentMethod": "CC",
-      "localBillType": "Budget",
-      "ratePlan": "3",
-      "churn": "T",
-      "zipcode": "95051",
-      "deviceOwned": "ipho",
-      "maritalStatus": "Married",
-      "mostDominantTone": "NotEvaluated",
-      "churnRisk": 0
-  };
+  user: User;
+  customer: Customer;
 
-  constructor(customerService : CustomersService) {}
+  constructor(customerService : CustomersService) {
+    this.user = JSON.parse(localStorage.getItem('currentUser'));
+    if(this.user && 'email' in this.user) {
+      customerService.getCustomerByEmail(this.user.email).subscribe(
+          data => {
+            this.customer=data;
+          },
+          error => {
+            console.log(error);
+          });
+    }
+
+  }
 
   ngOnInit() {
   }

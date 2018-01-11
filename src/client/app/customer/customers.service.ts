@@ -19,6 +19,12 @@ export class CustomersService {
           res.json())
   }
 
+  getCustomerByEmail(email): Observable<any>{
+    return this.http.get(this.custUrl+'/customers/email/'+email)
+         .map((res:Response) =>
+          res.json())
+  }
+
   saveCustomer(c) : Observable<any> {
     return this.http.post(this.custUrl+'/customers',{customer:c}).map((res:Response) => res.json());
   }
