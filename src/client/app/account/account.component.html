@@ -19,16 +19,11 @@
         <td class="col-md-9">${{customer.balance}}</td>
       <tr>
       <tr>
-        <td class="col-md-3"><b>Device</b></td>
-        <td class="col-md-9">{{customer.deviceOwned}}</td>
-      <tr>
-      <tr>
         <td class="col-md-3"><b>Plan</b></td>
         <td class="col-md-9">{{customer.ratePlan}}</td>
       <tr>
     </table>
   </div>
-
 
   <div class="panel panel-primary">
     <div class="panel-heading">
@@ -46,6 +41,22 @@
       <tr>
         <td class="col-md-3"><b>International</b></td>
         <td class="col-md-9">{{customer.international}}</td>
+      <tr>
+    </table>
+  </div>
+
+  <div class="panel panel-primary">
+    <div class="panel-heading">
+      <h3 class="panel-title">Devices</h3>
+    </div>
+    <table class="table">
+      <tr>
+        <th class="col-md-3">Name</th>
+        <th class="col-md-9">Usage</th>
+      </tr>
+      <tr *ngFor="let device of customer.devicesOwned">
+        <td class="col-md-3">{{device.productName}}</td>
+        <td class="col-md-9">{{device.monthlyUsage}}</td>
       <tr>
     </table>
   </div>
