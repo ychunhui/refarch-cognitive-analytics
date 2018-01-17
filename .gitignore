@@ -3,7 +3,7 @@
 src/dist
 /tmp
 src/build
-src/server/config.json
+src/server/config/config.json
 
 # dependencies
 src/node_modules
