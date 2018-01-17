@@ -12,6 +12,14 @@
       "url":"http://customer.green.case/caseserv/api/v1",
       "host":"customer.green.case"
   },
+  "toneAnalyzer":{
+      "url": "https://gateway.watsonplatform.net/tone-analyzer/api",
+      "username": "3e...",
+      "password": "z..."
+  },
+  "dbCredentials" : {
+    "url": "https://...-bluemix:cd....@...e50-bluemix.cloudant.com"
+  },
   "debug":true,
   "port": 3001,
   "version": "v0.0.1"
