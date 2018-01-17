@@ -75,7 +75,7 @@ From above figure left to right the components involved are:
 1. API product can be defined on top of the customer management service to monitor API usage and perform API governance. The implementation is supported by IBM API Connect.
 1. Data scientists use machine learning library and Jupiter notebook, R Studio or Zeppelin on top of Apache Spark in IBM Data Science Experience (DSX) to discover the model.
 1. The data used by data scientists are persisted in Db2 warehouse. [This note](./docs/ml-model.md) goes over the creation of the service within IBM Cloud private and how to access it from a Jupyter notebook running in DSX.
-* Ingestion mechanism can move historical data, for chat transcripts and customer records to the DB2 warehouse. This process can run on demand when Data Scientists need new data to tune the model. It can be implemented with an ETL. We just implemented it as a Java program as explained in [this note]()
+1. Ingestion mechanism can move historical data, for chat transcripts and customer records to the DB2 warehouse. This process can run on demand when Data Scientists need new data to tune the model. It can be implemented with an ETL. We just implemented it as a Java program as explained in [this note]()
 
 ### Demonstration Script
 We are detailing the demonstration script in a [separate note.](docs/demoflow.md)

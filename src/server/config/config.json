@@ -12,6 +12,9 @@
         "url":"http://customer.green.case/caseserv/api/v1",
         "host":"customer.green.case"
     },
+    "toneAnalyzer":{
+
+    },
     "debug":true,
     "port": 3001,
     "version": "v0.0.1"
