@@ -1,7 +1,7 @@
-# Implementation explanation
+# Implementation explanations
 ## Web Application
 ### Code explanation
-Most of the interactions the end users are doing on the Web Browser are supported by [Angular 4 single page](http://angular.io) javascript library, with its `router` mechanism and the DOM rendering capabilities via directives and components. When there is a need to access data to the on-premise server for persistence, an AJAX call is done to server, and  the server will respond asynchronously later on. The components involved are presented in the figure below in a generic way
+Most of the interactions the end users are doing via the Web Browser are supported by [Angular 4 single page](http://angular.io) javascript library, with its `router` mechanism and the DOM rendering capabilities via directives and components. When there is a need to access data to the on-premise server for persistence, an AJAX call is done to server, and  the server will respond asynchronously later on. The components involved are presented in the figure below in a generic way
 
 ![Angular 2 App](ang-node-comp.png)
 
@@ -20,8 +20,8 @@ We recommend beginners one Angular to follow the [product "tour of heroes" tutor
 
 ### Main Components
 As traditional Angular 4 app, you need:
-*  a main.ts script to declare and boostrap your application.
-* a app.module.ts to declare all the components of the application and the URL routes declaration. Those routes are internal to the web browser. They are protected by a guard mechanism to avoid unlogged person to access the page. The following code declares 3 routes for the three main features of this application: display the main top navigation page, the customer page to access account, and the itSupport to access the chat bot user interface. The AuthGard assess if the user is known and logged, if not it is routed to the login page.
+*  a `main.ts` script to declare and boostrap your application.
+* a `app.module.ts` to declare all the components of the application and the URL routes declaration. Those routes are internal to the web browser. They are protected by a guard mechanism to avoid unlogged person to access the page. The following code declares 3 routes for the three main features of this application: display the main top navigation page, the customer page to access account, and the itSupport to access the chat bot user interface. The AuthGard assess if the user is known and logged, if not it is routed to the login page.
  ```
  const routes: Routes = [
    { path: 'home', component: HomeComponent,canActivate: [AuthGuard]},
@@ -33,14 +33,14 @@ As traditional Angular 4 app, you need:
    { path: '**', redirectTo: 'home' }
  ]
  ```
-* an app.component to support the main page template where routing apply. This component has the header and footer of the HTML page and the placeholder directly to support sub page routing:
+* an `app.component` to support the main page template where routing is done. This component has the header and footer of the HTML page and the placeholder directly to support sub page routing:
  ```
     <router-outlet></router-outlet>
  ```
 
 ### Home page
-The home page is just a front end to navigate to the different features. It persist the user information in a local storage and use the angular router capability to map widget button action to method and route.
-For example the following HTML page use angular construct to link the button to the itSupport method of the Home.component.ts
+The home page is just a front end to navigate to the different features. It persists the user information in a local storage and uses the Angular router capability to map widget button action to method and route.
+For example the following HTML page uses angular construct to link the button to the `itSupport()` method of the Home.component.ts
 ```html
 <div class="col-md-6 roundRect" style="box-shadow: 3px 3px 1px #05870b; border-color: #05870b;">
       <h2>Support Help</h2>
@@ -57,11 +57,11 @@ itSupport(){
 ```
 ### Conversation bot
 For the conversation front end we are re-using the code approach of the conversation broker of the [Cognitive reference architecture implementation](https://github.com/ibm-cloud-architecture/refarch-cognitive-conversation-broker)
-The same approach, service and component are used to control the user interface and to call the back end. The service does an HTTP POST of the newly entered message.
+The same approach, service and component are used to control the user interface and to call the back end. The service does an HTTP POST of the newly entered message. The server code is under `server/routes/features/conversation.js`
 
 
-### Customer component
-For the customer the component in client/app/customer folder use a service to call the nodejs / expressjs REST services as illustrated in the code below:  
+### Account component
+When the user selects to access the account information, the routing is going to the account component in `client/app/account` folder use a service to call the nodejs / expressjs REST services as illustrated in the code below:  
 
 ```javascript
 export class CustomerService {
@@ -78,17 +78,26 @@ export class CustomerService {
 ```
 The http component is injected at service creation, and the promise returned object is map so the response can be processed as json document.
 
-An example of code using those service is the customer.component.ts, which loads the account during component initialization phase.
+An example of code using those service is the `account.component.ts`, which loads the account during component initialization phase.
 
 ```javascript
-export class CustomerComponent implements OnInit {
+export class AccountComponent implements OnInit {
 
   constructor(private router: Router, private cService : CustomerService){
   }
 
   // Uses in init to load data and not the constructor.
   ngOnInit(): void {
-    this.getProfile();
+    this.user = JSON.parse(localStorage.getItem('currentUser'));
+    if(this.user && 'email' in this.user) {
+      cService.getCustomerByEmail(this.user.email).subscribe(
+          data => {
+            this.customer=data;
+          },
+          error => {
+            console.log(error);
+          });
+    }
   }
 }
 ```
@@ -126,7 +135,7 @@ conversation.message(
 Finally this code can persist the conversation to a remote document oriented database. The code is in `persist.js` and a complete detailed explanation to setup this service is in [this note.](chattranscripts.md)
 
 ### Customer back end
-The customer API is defined in the server/routes/feature folder and uses request library to perform the call to the customer micro service API. The config.json file specifies the end point URL.
+The customer API is defined in the server/routes/feature folder and uses request library to perform the call to the customer micro service API. The `config.json` file specifies the end point URL.
 
 ```javascript
 const config = require('../env.json');
