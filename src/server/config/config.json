@@ -13,7 +13,9 @@
         "host":"customer.green.case"
     },
     "toneAnalyzer":{
-
+      "versionDate": "2017-09-21",
+      "username": "3edad474-c386-429e-84e7-9097fcd3e328",
+      "password": "zXfeNcN0zWQK"
     },
     "debug":true,
     "port": 3001,
