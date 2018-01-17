@@ -16,6 +16,7 @@
  */
 var request = require('request');
 const watson = require('watson-developer-cloud');
+var persist = require('./persist')
 /**
 Conversation delegates to the Conversation Broker Micro Service.
 */

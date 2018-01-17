@@ -6,7 +6,7 @@
       "password":"aDFBIIPYkQlD",
       "conversationId":"Complex Relocation",
       "workspace":"a97a02e3-d3c3-48de-8e64-20502819e582",
-      "usePersistence": false
+      "usePersistence": true
     },
     "customerAPI":{
         "url":"http://customer.green.case/caseserv/api/v1",
@@ -14,6 +14,7 @@
     },
     "toneAnalyzer":{
         "url": "https://gateway.watsonplatform.net/tone-analyzer/api",
+        "versionDate": "2017-09-21",
         "username": "3edad474-c386-429e-84e7-9097fcd3e328",
         "password": "zXfeNcN0zWQK"
     },
@@ -22,5 +23,5 @@
     },
     "debug":true,
     "port": 3001,
-    "version": "v0.0.1"
+    "version": "v0.0.2"
 }

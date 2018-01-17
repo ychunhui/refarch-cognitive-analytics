@@ -15,26 +15,31 @@
  * Jerome Boyer IBM boyerje@us.ibm.com
  */
 var https=require('https');
+var ToneAnalyzerV3=require('watson-developer-cloud/tone-analyzer/v3');
 
-const request = require('request').defaults({strictSSL: false});
-
-
-var buildOptions=function(met,aPath,config){
+var buildOptions = function(config){
   return {
-    url: config.toneAnalyzerAPI.url+aPath,
-  //  path:apath,
-
-    method: met,
-    rejectUnauthorized: true,
-    //ca: caCerts,
-    headers: {
-      accept: 'application/json',
-      'Content-Type': 'application/json',
-    }
+    username: config.toneAnalyzer.username,
+    password: config.toneAnalyzer.password,
+    version_date: config.toneAnalyzer.versionDate
   }
 }
 
 module.exports = {
-  analyseSentence : function(config,req,res){
-  }
+  analyzeSentence : function(config,req,res){
+    var tone_analyzer = new ToneAnalyzerV3(buildOptions(config));
+    var params = {
+      utterances: req.body.utterances
+    };
+
+    tone_analyzer.tone_chat(params, function(error, response) {
+      if (error) {
+        console.log('error:', error);
+        res.status(500).send(error);
+      }
+      else {
+        res.status(200).send(response);
+      }
+    });
+  } // analyseSentence
 } // exports
