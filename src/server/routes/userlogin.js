@@ -26,7 +26,7 @@ module.exports = function(app, passport){
   })
 
   app.post('/login', passport.authenticate('local', { failureFlash: 'Invalid username or password.' }), function(req, res){
-    console.log('User Authenticated Successfully:', req.user)
+    console.log('Login API: User Authenticated Successfully:', req.user)
     res.status(200).send(req.user);
   })
 }

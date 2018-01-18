@@ -53,10 +53,10 @@
 
  module.exports = {
    scoreCustomer : function(config,req,res,next){
-     var opts = buildOptions('GET','/customers/'+req.params.id,config);
-     opts.headers['Content-Type']='multipart/form-data';
+     //var opts = buildOptions('GET','/c/',config);
+     //opts.headers['Content-Type']='multipart/form-data';
      //processRequest(res,opts);
-     console.log("Call churn scoring service");
+     console.log("Call churn scoring service for "+req.body);
      next({"score":0.77})
    }
 } // exports
