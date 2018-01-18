@@ -19,6 +19,7 @@ const watson = require('watson-developer-cloud');
 var persist = require('./persist')
 var ticketing = require('./ticketingClient')
 var toneAnalyzer = require('./toneAnalyzerClient')
+var churnScoring = require('./churnServiceClient')
 
 /**
 Conversation delegates to the Conversation Broker Micro Service.
@@ -26,10 +27,15 @@ Conversation delegates to the Conversation Broker Micro Service.
 module.exports = {
   itSupport : function(config,req,res){
     req.body.context.predefinedResponses="";
-    if (req.body.context.toneAnalyzer && req.body.text !== "" ) {
+    if (req.body.context.toneAnalyzer  ) { //&& req.body.text !== ""
         toneAnalyzer.analyzeSentence(config,req.body.text).then(function(toneArep) {
               if (config.debug) {console.log('Tone Analyzer '+ JSON.stringify(toneArep));}
               req.body.context["ToneAnalysisResponse"]=toneArep.utterances_tone[0].tones[0];
+              if (req.body.context["ToneAnalysisResponse"].tone_name === "Frustrated") {
+                churnScoring.scoreCustomer(req.body,function(score){
+                    req.body.context["ChurnScore"]=score;
+                })
+              }
               sendToWCS(config,req,res);
         });
     }
