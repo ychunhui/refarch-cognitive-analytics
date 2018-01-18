@@ -36,7 +36,7 @@ module.exports = {
           tone_analyzer.tone_chat(params, function(error, response) {
             if (error) {
               console.log('error:', error);
-              resolve(null,error);
+              reject(null,error);
             }
             else {
               resolve(response);

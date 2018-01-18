@@ -47,10 +47,12 @@ Eddie also asking about the status of his reimbursement request, with the phrase
 
 The bot returns the status of the last ticket: it is rejected. Eddie is not very happy and complains about it: ""
 
-![]()
-The chat transcript from Eddie is sent to Tone Analyzer and NLU which then determines the sentiment and tone. Using the sentiment and the tone it is determined that Edie is  "Frustrated".
+![](eddie-upset.png)
+The chat transcript from Eddie is sent to Tone Analyzer and NLU which then determines the sentiment and tone. Using the sentiment and the tone it is determined that Eddie is  "Frustrated".
 
-The chatbot application then invokes the customer churn service which uses the ML model to determine that the customer is not a happy customer and has been with the Telco for 2 years. Eddie has a genuine problem and deserves a senior call center rep or a supervisor. Eddie is the type of customer the Telco does not want to loose. The application then asks Eddie for a number and the supervisor calls Eddie and clarifies and resolves Eddies issues.
+The chatbot application then invokes the customer churn service which uses the ML model to determine that the customer is not a happy customer and has been with the Telco for 2 years.
+The figure below illustrates this new flow:
 
+![](chat-bot-flow.png)
 
-Z OS Connect is used to create an API (Get Customer Detail). This API returns the customer information based on customer id.
+Eddie has a genuine problem and deserves a senior call center rep or a supervisor. Eddie is the type of customer the Telco does not want to loose. The application then asks Eddie for a number and the supervisor calls Eddie and clarifies and resolves Eddies issues.

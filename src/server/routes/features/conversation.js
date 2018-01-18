@@ -22,36 +22,47 @@ var toneAnalyzer = require('./toneAnalyzerClient')
 var churnScoring = require('./churnServiceClient')
 
 /**
-Conversation delegates to the Conversation Broker Micro Service.
+Function to support the logic of integrating all the services.
 */
 module.exports = {
   itSupport : function(config,req,res){
     req.body.context.predefinedResponses="";
-    if (req.body.context.toneAnalyzer  ) { //&& req.body.text !== ""
+    console.log("text "+req.body.text+".")
+    if (req.body.context.toneAnalyzer && req.body.text !== "" ) {
         toneAnalyzer.analyzeSentence(config,req.body.text).then(function(toneArep) {
               if (config.debug) {console.log('Tone Analyzer '+ JSON.stringify(toneArep));}
               req.body.context["ToneAnalysisResponse"]=toneArep.utterances_tone[0].tones[0];
               if (req.body.context["ToneAnalysisResponse"].tone_name === "Frustrated") {
-                churnScoring.scoreCustomer(req.body,function(score){
+                churnScoring.scoreCustomer(config,req,res,function(score){
                     req.body.context["ChurnScore"]=score;
                 })
               }
-              sendToWCS(config,req,res);
-        });
+              sendToWCSAndBackToUser(config,req,res);
+        }).catch(function(error){
+              console.log(error);
+          if (error.Error !== undefined) {
+            res.status(500).send({'text':error.Error});
+          }});
     }
-    if (req.body.context.action === "search") {
+    if (req.body.context.action === "search" && req.body.context.item ==="UserRequests") {
       ticketing.getUserTicket(config,req.body.user.email,function(ticket){
           if (config.debug) {
               console.log('Ticket response: ' + JSON.stringify(ticket));
           }
           req.body.context["Ticket"]=ticket
-          sendToWCS(config,req,res);
+          sendToWCSAndBackToUser(config,req,res);
       })
-    } else if (req.body.context.action === "recommend") {
+    }
+    if (req.body.context.action === "recommend") {
       // TODO call ODM Here
-        sendToWCS(config,req,res);
-    } else {
-        sendToWCS(config,req,res);
+        sendToWCSAndBackToUser(config,req,res);
+    }
+    if (req.body.context.action === "transfer") {
+      console.log("Transfer to "+ req.body.context.item)
+    }
+
+    if (req.body.context.action === undefined) {
+        sendToWCSAndBackToUser(config,req,res);
     }
   } // itSupport
 };
@@ -59,9 +70,9 @@ module.exports = {
 // ------------------------------------------------------------
 // Private
 // ------------------------------------------------------------
-function sendToWCS(config, req, res){
+function sendToWCSAndBackToUser(config, req, res){
   sendMessage(config,req.body,config.conversation.workspace,res).then(function(response) {
-    if (config.debug) {console.log(" <<< From WCS "+JSON.stringify(response,null,2));}
+    if (config.debug) {console.log("\n <<< From WCS "+JSON.stringify(response,null,2));}
     response.text="<p>"+response.output.text[0]+"</p>";
     //  support multiple choices response
     if (response.context.action === "click") {
@@ -69,6 +80,7 @@ function sendToWCS(config, req, res){
     }
     res.status(200).send(response);
   }).catch(function(error){
+        console.log(error);
     if (error.Error !== undefined) {
       res.status(500).send({'text':error.Error});
     }
@@ -81,7 +93,7 @@ var sendMessage = function(config,message,wkid,res,next){
           message.context["conversation_id"]=config.conversation.conversationId;
       }
       if (config.debug) {
-          console.log("--- Connect to Watson Conversation named: " + config.conversation.conversationId);
+          console.log("\n--- Connect to Watson Conversation named: " + config.conversation.conversationId);
           console.log(">>> to WCS "+JSON.stringify(message,null,2));
       }
       conversation = watson.conversation({
@@ -99,7 +111,7 @@ var sendMessage = function(config,message,wkid,res,next){
           function(err, response) {
             if (err) {
               console.log('error:', err);
-              resolve(null,{'Error': "Communication error with Watson Service. Please contact your administrator"});
+              reject(null,{'Error': "Communication error with Watson Service. Please contact your administrator"});
             } else {
               if (config.conversation.usePersistence) {
                   response.context.persistId=message.context.persistId;
