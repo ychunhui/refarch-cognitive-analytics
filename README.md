@@ -66,7 +66,7 @@ This repository presents best practices to deploy such solution on public and pr
 From above figure left to right the components involved are:
 1. Web application to offer a set of services for the end user to use: from this user interface the end user, customer of Green Telco, can access his account, pays his bill and uses the chat bot user interface to get support help. [This note](docs/code.md) presents the implementation details.
 1. The current chat application is not using any automated bot, but it is a messaging application with human as actors. There is no implementation for this component.
-1. The conversation transcripts are persisted in a document oriented database. We discuss about its implementation with cloudant in [this technical note.](docs/chattranscripts.md)
+1. The conversation transcripts are persisted in a document oriented database. We discuss about its implementation with cloudant in [this technical note.](docs/persist/chattranscripts.md)
 1. The chat bot is implemented with Watson Conversation. The workspace is delivered for you to upload to the Watson cloud service, [this note](docs/wcs-support.md) go into the implementation detail and deployment.
 1. A scoring service to assess current risk of churn for the customer interacting with Green Telco services. This is a runtime analytics service using customer data and results from the Tone Analysis. [This note](docs/scoring-serv.md) goes over the detail of the deployment and implementation of this machine learning based service.
 1. The conversation sentence can be analyzed for tone analysis, and natural language understanding, those data are used by the scoring service

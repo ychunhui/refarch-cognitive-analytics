@@ -22,14 +22,19 @@ IBM DSX running on IBM Watson Data Platform in IBM public cloud catalogs the con
 
 
 ## Predicting Customer Churn
-In this scenario, Eddie logs on to Green Telco portal application built as a Microservice and running on IBM Cloud Private. The userid is `eddie@email.com`.
+In this scenario, the following items can be demonstrated:
+* Eddie logs on to the `Green Telco portal` application built as a Microservice and running on IBM Cloud Private. The userid is `eddie@email.com`.
 
-![](login/png)
+![](login.png)
 
 
-Using the customer id from the login, the app invokes the Get Customer Detail API from the back end. There are two implementations for this API. One using direct access to a Java based service, and one using API Connect and Z OS Connect to retrieve the customer information. This information is collected by the App in memory.
+Using the customer id from the login, the app invokes the `Get Customer Detail API` from the back end to load customer and account data. There are two implementations for this API. One using direct access to a Java based service, and another using API Connect and Z OS Connect to retrieve the customer information. The loaded information is collected by the App in memory.
 
-Eddie complains about the poor quality of data and chat service while he was overseas. Eddie also talks about the rejection of his $750 claim.  Eddie is not very happy. The chat transcript from Eddie is sent to Tone Analyzer and NLU which then determine the sentiment and tone. Using the sentiment and the tone it is determined that Edie is not happy. The chatbot application then invokes the customer churn service which uses the ML model to determine that the customer is not a happy customer and has been with the Telco for 2 years. Eddie has a genuine problem and deserves a senior call center rep or a supervisor. Eddie is the type of customer the Telco does not want to loose. The application then asks Eddie for a number and the supervisor calls Eddie and clarifies and resolves Eddies issues.
+* Eddie complains about the poor quality of data and chat service while he was overseas.
+
+Eddie also talks about the rejection of his $750 claim.  Eddie is not very happy. The chat transcript from Eddie is sent to Tone Analyzer and NLU which then determine the sentiment and tone. Using the sentiment and the tone it is determined that Edie is not happy.
+
+The chatbot application then invokes the customer churn service which uses the ML model to determine that the customer is not a happy customer and has been with the Telco for 2 years. Eddie has a genuine problem and deserves a senior call center rep or a supervisor. Eddie is the type of customer the Telco does not want to loose. The application then asks Eddie for a number and the supervisor calls Eddie and clarifies and resolves Eddies issues.
 
 
 Z OS Connect is used to create an API (Get Customer Detail). This API returns the customer information based on customer id.

@@ -17,72 +17,98 @@
 var request = require('request');
 const watson = require('watson-developer-cloud');
 var persist = require('./persist')
+var ticketing = require('./ticketingClient')
+var toneAnalyzer = require('./toneAnalyzerClient')
+
 /**
 Conversation delegates to the Conversation Broker Micro Service.
 */
 module.exports = {
   itSupport : function(config,req,res){
-    if ( req.body.context !== undefined) {
-        req.body.context.action="";
-        req.body.context.predefinedResponses="";
+    req.body.context.predefinedResponses="";
+    if (req.body.context.toneAnalyzer && req.body.text !== "" ) {
+        toneAnalyzer.analyzeSentence(config,req.body.text).then(function(toneArep) {
+              if (config.debug) {console.log('Tone Analyzer '+ JSON.stringify(toneArep));}
+              req.body.context["ToneAnalysisResponse"]=toneArep.utterances_tone[0].tones[0];
+              sendToWCS(config,req,res);
+        });
     }
-    sendMessage(config,req.body,config.conversation.workspace,res,function(config,res,response) {
-      if (config.debug) {console.log(" Support <<< "+JSON.stringify(response,null,2));}
-      if (response.Error !== undefined) {
-        res.status(500).send({'text':response.Error});
-      } else {
-        response.text="<p>"+response.output.text[0]+"</p>";
-           //  support multiple choices response
-           if (response.context.action === "click") {
-               response.text= response.text+ "<br/><a class=\"btn btn-primary\" href=\""+response.context.url+"\">"+response.context.buttonText+"</a>"
-           }
-         res.status(200).send(response);
-      }});
+    if (req.body.context.action === "search") {
+      ticketing.getUserTicket(config,req.body.user.email,function(ticket){
+          if (config.debug) {
+              console.log('Ticket response: ' + JSON.stringify(ticket));
+          }
+          req.body.context["Ticket"]=ticket
+          sendToWCS(config,req,res);
+      })
+    } else if (req.body.context.action === "recommend") {
+      // TODO call ODM Here
+        sendToWCS(config,req,res);
+    } else {
+        sendToWCS(config,req,res);
+    }
   } // itSupport
 };
 
 // ------------------------------------------------------------
 // Private
 // ------------------------------------------------------------
+function sendToWCS(config, req, res){
+  sendMessage(config,req.body,config.conversation.workspace,res).then(function(response) {
+    if (config.debug) {console.log(" <<< From WCS "+JSON.stringify(response,null,2));}
+    response.text="<p>"+response.output.text[0]+"</p>";
+    //  support multiple choices response
+    if (response.context.action === "click") {
+        response.text= response.text+ "<br/><a class=\"btn btn-primary\" href=\""+response.context.url+"\">"+response.context.buttonText+"</a>"
+    }
+    res.status(200).send(response);
+  }).catch(function(error){
+    if (error.Error !== undefined) {
+      res.status(500).send({'text':error.Error});
+    }
+  });
+}
+
 var sendMessage = function(config,message,wkid,res,next){
-  if (config.debug) {
-      console.log("--- Connect to Watson Conversation named: " + config.conversation.conversationId);
-      console.log(">>> "+JSON.stringify(message,null,2));
-  }
-  if (message.context.conversation_id === undefined) {
-      message.context["conversation_id"]=config.conversation.conversationId;
-  }
-  conversation = watson.conversation({
-          username: config.conversation.username,
-          password: config.conversation.password,
-          version: config.conversation.version,
-          version_date: config.conversation.versionDate});
-
-  conversation.message(
-      {
-      workspace_id: wkid,
-      input: {'text': message.text},
-      context: message.context
-      },
-      function(err, response) {
-        if (err) {
-          console.log('error:', err);
-          next(config,res,{'Error': "Communication error with Watson Service. Please contact your administrator"});
-        } else {
-          if (config.conversation.usePersistence) {
-              response.context.persistId=message.context.persistId;
-              response.context.revId=message.context.revId;
-              persist.saveConversation(config,response,function(persistRep){
-                    response.context.persistId=persistRep.id;
-                    response.context.revId=persistRep.rev;
-                    console.log("Conversation persisted, response is now: "+JSON.stringify(response,null,2));
-                    next(config,res,response);
-              });
-          } else {
-              next(config,res,response);
-          }
-        }
+  return new Promise(function(resolve, reject){
+      if (message.context.conversation_id === undefined) {
+          message.context["conversation_id"]=config.conversation.conversationId;
       }
-    );
+      if (config.debug) {
+          console.log("--- Connect to Watson Conversation named: " + config.conversation.conversationId);
+          console.log(">>> to WCS "+JSON.stringify(message,null,2));
+      }
+      conversation = watson.conversation({
+              username: config.conversation.username,
+              password: config.conversation.password,
+              version: config.conversation.version,
+              version_date: config.conversation.versionDate});
 
+      conversation.message(
+          {
+          workspace_id: wkid,
+          input: {'text': message.text},
+          context: message.context
+          },
+          function(err, response) {
+            if (err) {
+              console.log('error:', err);
+              resolve(null,{'Error': "Communication error with Watson Service. Please contact your administrator"});
+            } else {
+              if (config.conversation.usePersistence) {
+                  response.context.persistId=message.context.persistId;
+                  response.context.revId=message.context.revId;
+                  persist.saveConversation(config,response,function(persistRep){
+                        response.context.persistId=persistRep.id;
+                        response.context.revId=persistRep.rev;
+                        console.log("Conversation persisted, response is now: "+JSON.stringify(response,null,2));
+                        resolve(response);
+                  });
+              } else {
+                  resolve(response);
+              }
+            }
+          }
+      );
+   }); // promise
 } // sendMessage

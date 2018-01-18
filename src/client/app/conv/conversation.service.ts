@@ -13,7 +13,8 @@ export class ConversationService {
   };
 
   submitMessage(msg:string,ctx:any): Observable<any>{
-    let bodyString = JSON.stringify(  { text:msg,context:ctx });
+    let user = JSON.parse(sessionStorage.getItem('currentUser'));
+    let bodyString = JSON.stringify(  { text:msg,context:ctx,user:user });
 
     let headers = new Headers({ 'Content-Type': 'application/json' });
     let options = new RequestOptions({ headers: headers })

@@ -57,13 +57,19 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   queryString=""
 
   callConversationBFF(msg:string) {
+    
     this.convService.submitMessage(msg,this.context).subscribe(
       data => {
         this.context=data.context;
         let s:Sentence = new Sentence();
         s.direction="from-watson";
         s.text=data.output.text[0];
-        this.currentDialog.push(s)
+        this.currentDialog.push(s);
+        // authorize the UI to see all the sentences from WCS even when there is not use input expected,
+        // like for example waiting for the best recommendation computed by ODM
+        if (data.context.action === "search" || data.context.action === "recommend"){
+          this.callConversationBFF("");
+        }
       },
       error => {
         return "Error occurs in conversation processing"
