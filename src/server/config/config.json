@@ -6,7 +6,7 @@
       "password":"aDFBIIPYkQlD",
       "conversationId":"Complex Relocation",
       "workspace":"a97a02e3-d3c3-48de-8e64-20502819e582",
-      "usePersistence": true
+      "usePersistence": false
     },
     "customerAPI":{
         "url":"http://customer.green.case/caseserv/api/v1",

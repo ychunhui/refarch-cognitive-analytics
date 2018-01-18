@@ -26,20 +26,22 @@ var buildOptions = function(config){
 }
 
 module.exports = {
-  analyzeSentence : function(config,req,res){
-    var tone_analyzer = new ToneAnalyzerV3(buildOptions(config));
-    var params = {
-      utterances: req.body.utterances
-    };
+  analyzeSentence : function(config,message,res){
+      return new Promise(function(resolve, reject){
+          var tone_analyzer = new ToneAnalyzerV3(buildOptions(config));
+          var params = {
+            utterances: [{"text":message}]
+          };
 
-    tone_analyzer.tone_chat(params, function(error, response) {
-      if (error) {
-        console.log('error:', error);
-        res.status(500).send(error);
-      }
-      else {
-        res.status(200).send(response);
-      }
-    });
+          tone_analyzer.tone_chat(params, function(error, response) {
+            if (error) {
+              console.log('error:', error);
+              resolve(null,error);
+            }
+            else {
+              resolve(response);
+            }
+          });
+      }); // promise
   } // analyseSentence
 } // exports

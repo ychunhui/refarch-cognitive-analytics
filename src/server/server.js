@@ -60,7 +60,7 @@ app.get('*', (req, res) => {
 
 const port = process.env.PORT || config.port;
 var server=app.listen(port, '0.0.0.0', function() {
-  console.log("Brown UI Server "+ config.version+" starting on " + port);
+  console.log("Green Telco Portal UI Server "+ config.version+" starting on " + port);
   console.log("  Use your web browser: http://localhost:"+port);
 });
 

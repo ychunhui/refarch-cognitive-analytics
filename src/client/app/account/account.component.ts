@@ -14,7 +14,7 @@ export class AccountComponent implements OnInit {
   customer: Customer;
 
   constructor(customerService : CustomersService) {
-    this.user = JSON.parse(localStorage.getItem('currentUser'));
+    this.user = JSON.parse(sessionStorage.getItem('currentUser'));
     if(this.user && 'email' in this.user) {
       customerService.getCustomerByEmail(this.user.email).subscribe(
           data => {
