@@ -1,14 +1,19 @@
 # Support Chat bot with Watson Conversation
 We recommend to follow [this tutorial](https://www.ibm.com/cloud/garage/tutorials/watson_conversation_support) to learn how to develop a Watson Conversation service and dialog flow.
+The implemented Watson Conversation workspace is under the folder `src/wcs`, named `telco-support-wcs-wks.json`. You can import it into your conversation service:
 
-For this project, looking at the use case description, and the type of interactions expected by end user like Eddie, we implemented the following intents:
-* Request status to address when a user is asking from an existing rebate request, or support request.
+![](import-wks.png)
+
+## What we built:
+For this project, looking at the [use case](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics#use-case) description, and the type of interactions expected by end user like Eddie, we implemented the following intents:
+* *Request status* to address when a user is asking from an existing rebate request, or support request.
 ![](conv-request-intent.png)
 
-* Create the intent about network data quality.  
+* Create the intent about *network data quality*.  
 ![](dataqos-intent.png)
 
-* Add dialog flow to support each intents: We need to have one node per intent: one for rate plan request, assess the status of an existing ticket
+The we work on the dialog flow to define how to respond to intent. We need to have one node per intent:
+* Add one to support the *rate plan request* intent, one for assess the status of an existing ticket, one for data quality...
 
 ![](dialog-top-node.png)
 
@@ -23,3 +28,5 @@ For this project, looking at the use case description, and the type of interacti
 * Finally when the tone analyzer returns values is risky the code calls the churn scoring service, adds it to the conversation context, and now the dialog can prepare an adequate response, like transfering to a human.
 
 ![](tone-analyzing-resp.png)
+
+Recall that you can unit test the conversation inside the Editor. See the tutorial on how to do so.
