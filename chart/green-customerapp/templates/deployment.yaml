@@ -24,7 +24,7 @@ spec:
             - containerPort: {{ .Values.service.internalPort }}
           volumeMounts:
             - name: config
-              mountPath: /caseportal/server/config.json
+              mountPath: /greenapp/server/config/config.json
               subPath: config.json
           livenessProbe:
             httpGet:
@@ -35,15 +35,15 @@ spec:
               path: /
               port: {{ .Values.service.internalPort }}
           resources:
-{{ toYaml .Values.resources | indent 12 }}
-    {{- if .Values.nodeSelector }}
-          volumes:
-            - name: config
-              configMap:
-                name:  {{ template "fullname" . }}
-          restartPolicy: Always
-          terminationGracePeriodSeconds: 30
-          dnsPolicy: ClusterFirst
-      nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
-    {{- end }}
+          {{ toYaml .Values.resources | indent 12 }}
+          {{- if .Values.nodeSelector }}
+        volumes:
+        - name: config
+          configMap:
+            name:  {{ template "fullname" . }}
+        restartPolicy: Always
+        terminationGracePeriodSeconds: 30
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+        {{ toYaml .Values.nodeSelector | indent 8 }}
+        {{- end }}

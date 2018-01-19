@@ -8,6 +8,6 @@ WORKDIR /greenapp
 #     npm install -g @angular/cli && \
 #    npm run build
 
-EXPOSE 6100
+EXPOSE 3001
 
 CMD node server/server.js
