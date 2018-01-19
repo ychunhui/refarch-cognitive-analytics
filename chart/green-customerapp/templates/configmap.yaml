@@ -19,6 +19,15 @@ data:
         "customerAPI":{
               "url":"{{ .Values.config.customerAPI.url }}"
         },
+        "toneAnalyzer":{
+              "url": "{{ .Values.config.toneAnalyzer.url }}" ,
+              "username": "{{ .Values.config.toneAnalyzer.username }}",
+              "password": "{{ .Values.config.toneAnalyzer.password }}"
+        },
+        "dbCredentials" : {
+            "url": "{{ .Values.config.dbCredentials.url }}"
+        },
+        "debug": "{{ .Values.config.debug }}",
         "port": "{{ .Values.config.port }}",
         "version": "{{ .Values.config.version }}"
     }

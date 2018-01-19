@@ -106,14 +106,17 @@ export class AccountComponent implements OnInit {
 ## Server code
 The application is using nodejs and expressjs standard code structure. The code is under `server` folder.
 ### Conversation back end.
-The script is in `server/route/features\conversation.js` and uses the Watson develop cloud library to connect to the remote service. This library encapsulates HTTP call and simplify the interaction. The only thing that needs to be done for each chat bot is to add logic to process the response, for example to get data for backend, or presents options, or call remote service like a rule engine / decision service.
-This module export one function to be called by the API used by the front end. This API is defined in api.js as:
+The script is in `server/route/features\conversation.js` and uses the Watson developer cloud library to connect to the remote service. This library encapsulates HTTP calls and simplify the interaction with the public service. The only thing that needs to be done for each chat bot is to add the logic to process the response, for example to get data from a backend, presents user choices in a form of buttons, or call remote service like a rule engine / decision service.
+
+This module exports one function to be called by the API used by the front end. This API is defined in `api.js` as:
 ```javascript
 app.post('/api/c/conversation',isLoggedIn,(req,res) => {
   conversation.itSupport(config,req,res)
 });
 ```
-The `conversation.itSupport` get the message and connection parameter and uses the Watson API:
+
+The `conversation.itSupport()` method gets the message and connection parameter and uses the Watson API to transfer the call.
+
 ```javascript
 conversation = watson.conversation({
         username: config.conversation.username,
@@ -132,33 +135,59 @@ conversation.message(
     }
   )
 ```
-Finally this code can persist the conversation to a remote document oriented database. The code is in `persist.js` and a complete detailed explanation to setup this service is in [this note.](chattranscripts.md)
+It uses content of the conversation context to drive some of the routing mechanism. This code supports the following sequencing:
+
+![](seq-diagram.png)
+* As the user is enquiring about an existing ticket support, the conversation set the action variable to "search", and return a message in "A" that the system is searching for existing records. The web interface send back an empty message on behave of the user so the flow can continue.
+* if the conversation context has a variable action set to "search", it calls the corresponding backend to get other data. Like a ticket management app. We did not implement the ticket management app, but just a mockup.
+```javascript
+if (req.body.context.action === "search" && req.body.context.item ==="UserRequests") {
+  ticketing.getUserTicket(config,req.body.user.email,function(ticket){
+      if (config.debug) {
+          console.log('Ticket response: ' + JSON.stringify(ticket));
+      }
+      req.body.context["Ticket"]=ticket
+      sendToWCSAndBackToUser(config,req,res);
+  })}
+```
+The ticket information is returned to the conversation directly and the message response is built there.
+* if the action is "recommend", the code can call a decision service deployed on IBM Cloud and execute business rules to compute the best recommendations/ actions. See example of such approach in [the project "ODM and Watson conversation"](https://github.com/ibm-cloud-architecture/refarch-cognitive-prod-recommendations)
+* if in the conversation context the boolean `toneAnalyzer` is set to true, then any new sentence sent by the end user will be sent to Watson Tone Analyzer.
+```javascript
+if (req.body.context.toneAnalyzer && req.body.text !== "" ) {
+    toneAnalyzer.analyzeSentence(config,req.body.text).then(function(toneArep) {
+      // ...
+    })
+}
+```
+* When the result to the tone analyzer returns a tone as Sad or Frustrated then a call to a churn scoring service is performed.
+```javascript
+if (req.body.context["ToneAnalysisResponse"].tone_name === "Frustrated") {
+  churnScoring.scoreCustomer(config,req,res,function(score){
+      req.body.context["ChurnScore"]=score;
+  })
+}
+sendToWCSAndBackToUser(config,req,res);
+```
+* when the churn score is greater than a value the call is routed to a human. This is done in the conversation dialog and the context action is set to Transfer
+```javascript
+if (req.body.context.action === "transfer") {
+  console.log("Transfer to "+ req.body.context.item)
+}
+```
+See also how the IBM Watson conversation is built to support this logic, in [this note.](wcs-support.md)
+
+Finally this code can persist the conversation to a remote document oriented database. The code is in `persist.js` and a complete detailed explanation to setup this service is in [this note.](persist/chattranscripts.md)
 
 ### Customer back end
 The customer API is defined in the server/routes/feature folder and uses request library to perform the call to the customer micro service API. The `config.json` file specifies the end point URL.
 
 ```javascript
-const config = require('../env.json');
-const apiUrl=config.secureGateway.url+config.apiGateway.url+"/items";
-
-router.get('/items', function(req,res){
-  console.log("In inventory get all the items from the exposed api");
-  var h = {
-    'X-IBM-Client-Id': config.apiGateway.xibmclientid,
-    'Accept': 'application/json',
-    'Authorization': 'Bearer '+req.headers.token
-  }
-  request.get(
-      {url:apiUrl,
-      timeout: 5000,
-      headers: h
-      },
-      function (error, response, body) {
-
-      }
-     );
-
-});
+getCustomerByEmail : function(config,req,res){
+  var opts = buildOptions('GET','/customers/email/'+req.params.email,config);
+  opts.headers['Content-Type']='multipart/form-data';
+  processRequest(res,opts);
+}
 
 ```
 ## Customer Micro service
