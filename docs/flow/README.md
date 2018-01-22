@@ -2,16 +2,19 @@
 There are two paths to demonstrate, the model creating, focusing on analytics work from at-rest data, and the end user view of the application.
 
 ## Training the Machine Learning Model
+Customer Information that is residing in DB2 running on Z contains customer’s personal information like age, gender, profession, family, income, and account information like service usage, rate plan and device owned. This is item [7] in diagram below:
 
-Customer Information that is residing in DB2 running on Z contains customer’s personal information like age, gender, profession, family, income, and account information like service usage, rate plan and device owned. The data model can be seen [here](). It also contains information about the survey input back from the customer.
+![](ML-flow.png)
 
-Customer Information is currently planned to run and be maintained on system z.
+ The data model can be seen [here](https://github.com/ibm-cloud-architecture/refarch-integration-services#data-model).
 
-A cloud native application running on IBM Cloud Private ingests customer information from DB2 running on mainframe into the DB2 Warehouse running on IBM cloud private on Z. (Alternatively, IBM Information Server products can be used to move data)
+Customer Information is currently planned to run and be maintained on system Z.
 
-IBM DSX running on ICP uses the in the DB2 Warehouse to train a model to predict customer churn.
+An Extract Transform Load job, or other script running on-premise ingests customer information from DB2 running on mainframe into the DB2 Warehouse running on IBM cloud private on Z. Items [12] in diagram above. (Alternatively, IBM Information Server products can be used to move data). The current implementation is using a Java based implementation of the customer service, using a micro service approach, see the explanation in [this project](https://github.com/ibm-cloud-architecture/refarch-integration-services)
 
-In addition, past customer voice records maintained in a file system is cleansed by a cloud native application running on IBM Cloud Private. The cleansed information is then transcribed using IBM Watson Speech to Text running on IBM Public cloud. The transcribed information is persisted on IBM Cloudant database running on IBM public cloud.
+IBM DSX running on ICP uses the data persisted in DB2 Warehouse (Item [11]) to train a model to predict customer churn (Item [10]). The machine learning / jupyter notebook explanations are in [this note]().
+
+In addition, past customer voice records maintained in a file system is cleansed by a cloud native application running on IBM Cloud Private. The cleansed information is then transcribed using IBM Watson Speech to Text running on IBM Public cloud. The transcribed information is persisted on IBM Cloudant database (Item [3]) running on IBM public cloud.
 
 IBM Knowledge Studio is used to create custom models to understand the content that is part of the voice chat records.
 
