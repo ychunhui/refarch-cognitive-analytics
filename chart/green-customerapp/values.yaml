@@ -34,8 +34,8 @@ config:
     workspace: a97a02e3-d3c3-48de-8e64-20502819e582
     usePersistence: false
   customerAPI:
-    url: http://customer.green.case/caseserv/api/v1
-    host: customer.green.case
+    url: http://greencustomerms-green-customerms:9080/caseserv/api/v1
+    host: greencustomerms-green-customerms
   toneAnalyzer:
     url: https://gateway.watsonplatform.net/tone-analyzer/api
     versionDate: 2017-09-21

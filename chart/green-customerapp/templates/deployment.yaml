@@ -16,6 +16,10 @@ spec:
         app: {{ template "name" . }}
         release: {{ .Release.Name }}
     spec:
+      volumes:
+      - name: config
+        configMap:
+          name:  {{ template "fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -37,10 +41,6 @@ spec:
           resources:
           {{ toYaml .Values.resources | indent 12 }}
           {{- if .Values.nodeSelector }}
-        volumes:
-        - name: config
-          configMap:
-            name:  {{ template "fullname" . }}
         restartPolicy: Always
         terminationGracePeriodSeconds: 30
         dnsPolicy: ClusterFirst
