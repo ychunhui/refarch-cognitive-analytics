@@ -10,7 +10,8 @@
     },
     "customerAPI":{
         "url":"http://customer.green.case/caseserv/api/v1",
-        "host":"customer.green.case"
+        "host":"customer.green.case",
+        "xibmclientid": "d6ef6d26-f017-42e6-b703-1d8aecfe1834"
     },
     "toneAnalyzer":{
         "url": "https://gateway.watsonplatform.net/tone-analyzer/api",

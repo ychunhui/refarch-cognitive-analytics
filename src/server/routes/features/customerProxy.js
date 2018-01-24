@@ -30,6 +30,7 @@ var buildOptions=function(met,aPath,config){
     headers: {
       accept: 'application/json',
       'Content-Type': 'application/json',
+      'X-IBM-Client-Id': config.customerAPI.xibmclientid,
       Host: config.customerAPI.host,
     }
   }
