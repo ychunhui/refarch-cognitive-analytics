@@ -1,6 +1,17 @@
 # Run the different components of the solution
+This section addresses how to run all the components of the solution. It is not a tutorial and you need to have hands on experience on IBM Cloud Private and IBM Cloud. You also need access to Virtual Machines to be able to run the solution.
 
 ## Pre-Requisites
+### Server environment
+*If you work for IBM, please contact us so you can access our labs via VPN.* 
+
+If you want to setup the environment on your own you will need 4 computers/ VMs:
+* an ICP cluster with at the bare minimum of 3 VMs: one master node, one proxy and one worker node. This is for the run time. For the analytics part, using DSX, you can use the IBM Cloud service or use the `DSX developer chart` from the ICP catalog, and use your ICP instance.
+* One VM for DB2 community edition, Liberty
+In the close future we plan to deliver a Vagrant file to get a unique virtual environment with DB2 dev, Liberty, and you can use [this vagrant](https://github.com/IBM/deploy-ibm-cloud-private) file for ICP.
+
+In production you will use a dedicated cluster with DSX local deployed on it. This is out environment as explained [here](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/ICP/README.md)
+
 ### For the Web App built using nodejs and expressjs
 * For this application you need to have [nodejs](https://nodejs.org/en/) installed on your computer with the [npm](https://www.npmjs.com/) installer tool.
 * Clone this current repository, or if you want to work on the code, fork it in your own github repository and then clone your forked repository on your local computer. If you used the `fork-repos.sh` script from the [Data & Analytics reference implementation solution](https://github.com/ibm-cloud-architecture/refarch-analytics) main repository, you are already set.
@@ -20,6 +31,10 @@ npm install
 ```
 sudo npm install -g nodemon
 ```
+### For Watson Conversation service
+
+### For Tone analyzer
+Create the service in IBM Cloud and get the credentials. See also [this note](w-tone-analyzer.md) for more details.
 
 ## Build
 ### For the Web App
@@ -75,7 +90,7 @@ $ docker push greencluster.icp:8500/greencompute/greenapp:v0.0.1
 ```
 
 #### Deploy the release using the helm
-First you need to rename the file values-tmpl.yaml to value.yaml and set the parameters as the config.json. We are using the mechanism of config map to externalize the configuration as defined by the `config.json`. While using cloud foundry or pure local nodejs deployment this file is read from the filesystem by the server.js. But with kubernetes pods the best practice is to export this configuration into `ConfigMap`.
+First you need to rename the file `values-tmpl.yaml` to `values.yaml` and set the parameters as the config.json. We are using the mechanism of config map to externalize the configuration as defined by the `config.json`. While using cloud foundry or pure local nodejs deployment this file is read from the filesystem by the server.js. But with kubernetes pods the best practice is to export this configuration into `ConfigMap`.
 To do so we need to create a new template: `templates/configmap.yaml`. This file uses the same structure as the `config.json` file:
 
 ```yaml

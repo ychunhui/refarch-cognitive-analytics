@@ -1,6 +1,8 @@
-# Customer analysis with cognitive and analytics
+# Customer analysis with cognitive and analytics in hybrid cloud
 The goal of this implementation is to deliver a reference implementation for data management and service integration to consume structured and unstructured data to assess customer attrition.
-Modern applications are leveraging a set of capabilities to do a better assessment of customer characteristics and deliver best actions or recommendations. The technologies involved, include artificial intelligence, data governance, ingestion, enrichment, storage, analysis, machine learning, unstructured data classifications, natural language understanding, image recognition, speech to text, ....
+Modern applications are leveraging a set of capabilities to do a better assessment of customer characteristics and deliver best actions or recommendations. The technologies involved, include artificial intelligence, data governance, ingestion, enrichment, storage, analysis, machine learning, unstructured data classifications, natural language understanding, image recognition, speech to text, tone analysis....
+
+Update 01/30/18: The solution is not a lab or complete end to end tutorial...yet...
 
 ## Target audience
 * Architects who want to understand the components involved and the architecture constraints and design considerations
@@ -11,9 +13,9 @@ Modern applications are leveraging a set of capabilities to do a better assessme
 * Data scientists need different source of data, structured from traditional SQL based database (e.g. the customers and accounts data) and unstructured output of new cognitive services.
 * Data Scientists work hand by hand with application developers to quickly deliver solution to the business
 * Data access layer to traditional relational data should be done with a micro service approach exposing RESTful API or using modern z OS Connect application.
-* Cloud native apps, micro services, can be deployed in public or private cloud, like IBM Cloud private based on Kubernetes
-* Public services like the Watson services can be easily integrated within the solution
-* API management should be added to govern API
+* Cloud native apps, micro services, can be deployed in public or private cloud, like IBM Cloud private based on Kubernetes and containers
+* Public services like the Watson services can be easily integrated within the solution: Watson Data Platform, Data Science Experience, Tone Analyzer, Watson Conversation
+* API management is used to present a unique API for customer data, standardize for consumers like the webapp, even if the back end is Java based or z Connected based.
 
 ## Table of contents
 * [Presentation](#presentation)
@@ -53,7 +55,7 @@ Further the supervisor explains to Eddie that the reason he was not given the $7
 
 Eddie walks in the store and his problem was resolved. Once, he got the refund in one week he paid the first phone with his cash and the second phone with the $750 visa card.
 
-The customer churn service helped Eddie to remain as the customer for the Green Telco.
+The customer churn service helped Eddie to remain as a customer for the Green Telco.
 
 ### System Context diagram
 The following diagram illustrates the system context of the application, including analytics model preparation and run time execution.
@@ -64,10 +66,10 @@ This repository presents best practices to deploy such solution on public and pr
 
 ## Components
 From above figure left to right the components involved are:
-1. Web application to offer a set of services for the end user to use: from this user interface the end user, customer of Green Telco, can access his account, pays his bill and uses the chat bot user interface to get support help. [This note](docs/code.md) presents the implementation details.
+1. Web application to offer a set of services for the end user to use: from this user interface the end user, customer of Green Telco, can access his account, pays his bill and uses the chat bot user interface to get support help. [This note](docs/code.md) presents the implementation details and how to deploy it on ICP.
 1. The current chat application is not using any automated bot, but it is a messaging application with human as actors. There is no implementation for this component.
-1. The conversation transcripts are persisted in a document oriented database. We discuss about its implementation with cloudant in [this technical note.](docs/persist/chattranscripts.md)
-1. The chat bot is implemented with Watson Conversation. The workspace is delivered for you to upload to the Watson cloud service, [this note](docs/wcs/README.md) go into the implementation detail and deployment.
+1. The conversation transcripts are persisted in a document oriented database. We discuss about its implementation with Cloudant in [this technical note.](docs/persist/chattranscripts.md)
+1. The chat bot is implemented with Watson Conversation. The workspace is delivered for you to upload to a Watson cloud service you may have created, [this note](docs/wcs/README.md) go into the implementation detail and deployment.
 1. A scoring service to assess current risk of churn for the customer interacting with Green Telco services. This is a runtime analytics service using customer data and results from the Tone Analysis. [This note](docs/scoring-serv.md) goes over the detail of the deployment and implementation of this machine learning based service.
 1. The conversation sentence can be analyzed for tone analysis, and natural language understanding, those data are used by the scoring service. The service creation in IBM Cloud and the integration into the application flow is explained in [this note](./docs/w-tone-analyzer.md)
 1. The customer [data](https://github.com/ibm-cloud-architecture/refarch-integration-services#data-model) are persisted in on-premise server with relational database. We are using DB2 on-premise server for that. To read how the database was created see [the note in this repository](https://github.com/ibm-cloud-architecture/refarch-integration-services/blob/master/docs/DB2Creation.md)
@@ -101,6 +103,13 @@ The first configuration deploys the customer manager micro service on ICP, acces
 The cluster topology with some of the major ICP and solution components will look like the following diagram:
 
 ![](docs/icp-compo.png)
+
+### Using Watson Data Platform
+As an alternate to use DSX on ICP to develop the machine learning model, Data Scientist can use Watson data platform to gather the data, persist in public object store and deploy the model once trained to Watson Machine learning.
+
+![](docs/deployment-cfg3.png)
+
+See [this note](docs/ml/README.md) for detail about the implementation of the model.
 
 ### Using Data Service as Z Connect service
 For Z OS deployment the solution looks like the diagram below, where the data service and DB2 are running on Z OS.
