@@ -139,7 +139,25 @@ Now you should have a clientID to be used in future request from the application
 
 ![](client-id.png)
 
-This client id needs to be part of the HTTP header like in the code below:
-```
+This client id needs to be part of the HTTP header like you can see in the code below:
+```javascript
+var buildOptions=function(met,aPath,config){
+  return {
+    url: config.customerAPI.url+aPath,
+    method: met,
+    rejectUnauthorized: true,
+    headers: {
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+      'X-IBM-Client-Id': config.customerAPI.xibmclientid,
+      Host: config.customerAPI.host,
+    }
+  }
+}
+getCustomerByEmail : function(config,req,res){
+  var opts = buildOptions('GET','/customers/email/'+req.params.email,config);
+  opts.headers['Content-Type']='multipart/form-data';
+  processRequest(res,opts);
+}
 
 ```
