@@ -190,5 +190,6 @@ getCustomerByEmail : function(config,req,res){
 }
 
 ```
+### ICP deployment
 ## Customer Micro service
 The back end customer management function is a micro service in its separate repository, and the code implementation explanation can be read [here.](https://github.com/ibm-cloud-architecture/refarch-integration-services#code-explanation)
