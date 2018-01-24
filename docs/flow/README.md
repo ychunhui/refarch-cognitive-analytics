@@ -40,6 +40,11 @@ From the home page, user can access his/her account or the chat bot:
 
 ![](home-page.png)
 
+The account information comes from the backend database:   
+
+![](account-info.png)
+
+
 * Eddie complains about the poor quality of data and chat service while he was overseas. He enters the sentence: "I was oversea and the data was poor"
 
 ![](data-qos.png)  
