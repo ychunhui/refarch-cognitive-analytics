@@ -25,7 +25,7 @@ Update 01/30/18: The solution is not a lab or complete end to end tutorial...yet
 * [Deployment](#deployment)
 * [Implementation detail](./docs/code.md)
 * [Resiliency](#resiliency)
-* [Compendium](#compendium)
+* [Further readings](#further-readings)
 
 ## Presentation
 ### Use case
@@ -80,20 +80,44 @@ From above figure left to right the components involved are:
 1. Ingestion mechanism can move data, for chat transcripts and customer records to the DB2 warehouse. This process can run on demand when Data Scientists need new data to tune the model. It can be implemented with an ETL, with Java program, or using the Db2 Federation capability. [This note](docs/data/README.md) explains what was done as ingestion using Db2 warehouse.
 
 ### Demonstration Script
-We are detailing the demonstration script in a [separate note.](docs/flow/README.md)
+As an executable solution, we are presenting the demonstration script in a [separate note.](docs/flow/README.md). You need to have a running environment or being able to access our IBM internal environment for that.
 
 ## Methodology
 The following diagram illustrates the artificial intelligence / cognitive capabilities developers can integrate in their business application. data scientists can leverage to develop their analytics models, and the data tasks that need to be perform on private, public or licensed dataset.
 ![](docs/cognitive-data-capabilities.png)
 
+### Micro service development
+From a pure software engineering implementation, we adopt agile, iterative implementation: the following lower level tasks were done:
+* Develop the data model for the customer, accounts, device as java classes...
+* Develop the Java REST API with resources for customer, account and products, and JAXRS annotations
+* Unit test the API
+* Add JPA annotation to entities, develop Data Transfer Object for service interface, refactoring the API.
+* Implement Data Access Object classes with respective unit tests. In fact we started by defining the tests. We used a embedded derby, which has a very similar SQL support as DB2, for the unit tests.
+* Develop compile and build script using gradle to be ready for CI/CD
+* Package the webapp as war, deploy to a liberty, tune the liberty settings
+* Dockerize the service with liberty server and the webapp  
+* Build helm chart to deploy to IBM Cloud private
+* Build DB2 scripts to prepare the external database, create instance to test and product DB2 instances, add simple data for testing and demo
+* Develop integration tests to validate at the API level the end to end senario
+* Develop the WebApp to support the demonstration using nodejs and angular 4 and the BFF pattern
+* Integrate the webApp with the customer manager micro service running on icp
+* Define / extract the swagger using Liberty api Discovery which is able to introspect the JAXRS annotations and generates the swagger
+* Share the swagger with Z OS team so they can implement the service with z Connect bases on the same interface definition
+* Add API product using the swagger, publish the API to the Data Power gateway, test with Postman the integration API -> REST service on ICP -> DB2 on on-premise server.
+* Change the URL of the webapp to point to the API end point, redeploy to ICP.
+
+### Analytics specifics
+TO BE COMPLETED.
+
 ## Deployment
-There are multiple possible configurations for the deployment depending of the use of public and private cloud and the legacy system involved.
+There are multiple possible configurations for the deployment, depending of the use of public and private cloud and the legacy system involved. For the back end we have  two options: Z OS with DB2 and Z Connect, and Java based REST micro service and DB2. For the machine learning DSX on ICP with Spark cluster for model execution or Watson Data Platform on IBM Cloud with Watson ML on IBM Cloud for the scoring service.
+
 ### Using data service as a Java micro service:
-The first configuration deploys the customer manager micro service on ICP, accessing customer and account tables in DB2 servers out side of ICP. The Web application is deployed on ICP, as well as the scoring service.
+The first configuration deploys the customer manager micro service on ICP, accessing customer and account tables in DB2 servers out side of ICP, with API Connect to manage customer API product. The Web application is deployed on ICP, as well as the scoring service.
 
 ![](docs/deployment-cfg1.png)
 
-* As machine learning discovery tasks running on Spark cluster are development activities and consume a lot of resources we separated the DSX, Db2 warehouse and Spark cluster in its separate ICP instance.
+* As machine learning discovery tasks running on Spark cluster are development activities and consume a lot of resources we separated the DSX, Db2 warehouse and Spark cluster in its separate ICP instance
 * The runtime for cloud native applications and micro services is an ICP with HA and DR support.
 * The scoring service is deployed on a Spark Cluster running on ICP runtime cluster.
 * The DB2 instance runs on separate servers, to illustrate the use case of keeping existing infrastructure investments.
@@ -105,7 +129,7 @@ The cluster topology with some of the major ICP and solution components will loo
 ![](docs/icp-compo.png)
 
 ### Using Watson Data Platform
-As an alternate to use DSX on ICP to develop the machine learning model, Data Scientist can use Watson data platform to gather the data, persist in public object store and deploy the model once trained to Watson Machine learning.
+As an alternate to use DSX on ICP to develop the machine learning model, Data Scientist can use Watson Data platform to gather the data, persist in public object store and deploy the model once trained to Watson Machine learning.
 
 ![](docs/deployment-cfg3.png)
 
@@ -118,7 +142,7 @@ For Z OS deployment the solution looks like the diagram below, where the data se
 
 [This note](docs/zconnect.md) details the Z Connect implementation.
 
-# Compendium
+# Further readings
 
 # Contribute
 We welcome your contribution. There are multiple ways to contribute: report bugs and improvement suggestion, improve documentation and contribute code.

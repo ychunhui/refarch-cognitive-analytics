@@ -2,7 +2,7 @@
 There are two paths to demonstrate, the model creating, focusing on analytics work from at-rest data, and the end user view of the application.
 
 ## Training the Machine Learning Model
-Customer Information that is residing in DB2 running on Z contains customer’s personal information like age, gender, profession, family, income, and account information like service usage, rate plan and device owned. This is item [7] in diagram below:
+Customer Information, that is persisted in DB2 running on Z, contains customer’s personal information like age, gender, profession, family, income, and account information like service usage, rate plan and device owned. This is item [7] in diagram below:
 
 ![](ML-flow.png)
 
