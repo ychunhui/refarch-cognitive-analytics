@@ -180,3 +180,8 @@ and in the configuration file, we need to change the URL and add the new paramet
 }
 ```
 Remark: the host attribute is still needed if you do not have DNS resolution in the network where ICP, API gateway are running.
+
+
+# Further readings
+* Tutorial on the garage method https://cloudcontent.mybluemix.net/cloud/garage/demo/try-api-connect
+* Brown compute specific API management best practices: https://github.com/ibm-cloud-architecture/refarch-integration-api#implementation-details
