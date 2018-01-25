@@ -112,9 +112,12 @@ In the product view, select the upload button on the right side to stage the pro
 
 ![](Upload to sandbox.png)
 
-You can see from the figure above we select a default plan. In production you will define a plan according to business requirements.
+You can see from the figure above we select a default plan. In production you will define a plan according to business requirements. Publish the product to the catalog, you should be able to see the new URL for the API endpoint: (e.g. https://172.16.50.8/csplab/sb/customers)
 
-Once deployed developers can access the API Portal to define  
+![](url-access.png)
+
+Once deployed developers can access the API Portal to define the application the developer will implement and that subscribed to this product.
+
 ## Step 5: Define application for developer
 Using the portal at a URL like: https://172.16..../csplab/sb you can access to the API portal for developers.
 
@@ -139,7 +142,14 @@ Now you should have a clientID to be used in future request from the application
 
 ![](client-id.png)
 
-This client id needs to be part of the HTTP header like you can see in the code below:
+This client id needs to be part of the HTTP header for any request to the api. You should be able to do an integration test to validate the path API product deployed on gateway -> Java REST micro service on ICP -> DB2, using a tool like postman or SOAP UI. The following figure illustrates a GET request to the API URL to get a customer given its id, with the setting of the `X-IBM-Client-Id` in the HTTP header.
+
+![](postman-api-test.png)
+ Cool! we get the good answer.
+
+### Modify consumer
+The webapp we developed for the demonstration, needs to be update to integrate the HTTP header as below:
+
 ```javascript
 var buildOptions=function(met,aPath,config){
   return {
@@ -161,3 +171,12 @@ getCustomerByEmail : function(config,req,res){
 }
 
 ```
+and in the configuration file, we need to change the URL and add the new parameter:
+```json
+"customerAPI":{
+    "url":"https://172.16.50.8:443/csplab/sb",
+    "host":"customer.green.case",
+    "xibmclientid": "d6ef6d26-f017-42e6-b703-1d8aecfe1834"
+}
+```
+Remark: the host attribute is still needed if you do not have DNS resolution in the network where ICP, API gateway are running.
