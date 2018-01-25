@@ -56,3 +56,6 @@ where c.account_accountnumber = a.accountnumber
 Please note that if a large number of rows was involved this insert could easily be too big to do like this.
 
 ![](customeraccount.png)
+
+# Compendium
+* As we used remote table in this solution you can deep dive into *federated systems* from the product documentation: https://www.ibm.com/support/knowledgecenter/SS6NHC/com.ibm.data.fluidquery.doc/topics/cfpint01.html
