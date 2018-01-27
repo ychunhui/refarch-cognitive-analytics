@@ -32,7 +32,7 @@ Ingestion of data from different data sources requires creating connection to th
 
 To begin with, open IBM Watson Data Platform (henceforth in this document referred to as WDP) using a browser. The main screen should show something like the following:
 
-![wdp_main](wdp-main-1.png)
+![wdp_main](../wdp-main-1.png)
 
 ## Analytical Model
 
