@@ -143,6 +143,8 @@ For Z OS deployment the solution looks like the diagram below, where the data se
 [This note](docs/zconnect.md) details the Z Connect implementation.
 
 # Further readings
+* [Data Analysis using Spark on zOS and Jupyter Notebooks](https://github.com/IBM/Spark-on-zOS)
+*
 
 # Contribute
 We welcome your contribution. There are multiple ways to contribute: report bugs and improvement suggestion, improve documentation and contribute code.

@@ -3,14 +3,14 @@ This section addresses how to run all the components of the solution. It is not 
 
 ## Pre-Requisites
 ### Server environment
-*If you work for IBM, please contact us so you can access our labs via VPN.* 
+*If you work for IBM, please contact us so you can access our labs via VPN.*
 
 If you want to setup the environment on your own you will need 4 computers/ VMs:
 * an ICP cluster with at the bare minimum of 3 VMs: one master node, one proxy and one worker node. This is for the run time. For the analytics part, using DSX, you can use the IBM Cloud service or use the `DSX developer chart` from the ICP catalog, and use your ICP instance.
 * One VM for DB2 community edition, Liberty
 In the close future we plan to deliver a Vagrant file to get a unique virtual environment with DB2 dev, Liberty, and you can use [this vagrant](https://github.com/IBM/deploy-ibm-cloud-private) file for ICP.
 
-In production you will use a dedicated cluster with DSX local deployed on it. This is out environment as explained [here](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/ICP/README.md)
+In production you will use a dedicated cluster with DSX local deployed on it. This is out environment as explained [in this note](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/ICP/README.md)
 
 ### For the Web App built using nodejs and expressjs
 * For this application you need to have [nodejs](https://nodejs.org/en/) installed on your computer with the [npm](https://www.npmjs.com/) installer tool.
@@ -32,6 +32,7 @@ npm install
 sudo npm install -g nodemon
 ```
 ### For Watson Conversation service
+Create the service in IBM Cloud and get the credentials, update the configuration file (config.json and values.yaml) for the webapp to access the conversation service. [See this note about implementation](./wcs/README.md)
 
 ### For Tone analyzer
 Create the service in IBM Cloud and get the credentials. See also [this note](w-tone-analyzer.md) for more details.
@@ -169,7 +170,10 @@ One volume, named `config` uses the configMap named using the template name of t
 Deploy the chart as a new release
 ```
 $ cd ../chart
-$ helm install green-customerapp/ --name green-customerapp --namespace green-compute
+$ helm install green-customerapp/ --name green-customerapp --namespace greencompute
 ```
 
 Assess deployment is successful:
+```
+$ kubectl logs <pod name> --namespace greencompute
+```
