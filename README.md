@@ -2,7 +2,7 @@
 The goal of this implementation is to deliver a reference implementation for data management and service integration to consume structured and unstructured data to assess customer attrition.
 Modern applications are leveraging a set of capabilities to do a better assessment of customer characteristics and deliver best actions or recommendations. The technologies involved, include artificial intelligence, data governance, ingestion, enrichment, storage, analysis, machine learning, unstructured data classifications, natural language understanding, image recognition, speech to text, tone analysis....
 
-Update 01/30/18: The solution is not a lab or complete end to end tutorial...yet...
+Update 01/31/18: The solution is not a lab or complete end to end tutorial...yet...
 
 ## Target audience
 * Architects who want to understand the components involved and the architecture constraints and design considerations
@@ -60,7 +60,7 @@ The customer churn service helped Eddie to remain as a customer for the Green Te
 ### System Context diagram
 The following diagram illustrates the system context of the application, including analytics model preparation and run time execution.
 
-![](docs/syst-ctx.png)
+![](docs/syst-ctx-0.png)
 
 This repository presents best practices to deploy such solution on public and private cloud, implements the webapp deployable in public or private cloud, and deliver example of data sets.
 
@@ -75,7 +75,7 @@ From above figure left to right the components involved are:
 1. The customer [data](https://github.com/ibm-cloud-architecture/refarch-integration-services#data-model) are persisted in on-premise server with relational database. We are using DB2 on-premise server for that. To read how the database was created see [the note in this repository](https://github.com/ibm-cloud-architecture/refarch-integration-services/blob/master/docs/DB2Creation.md)
 1. Customer data are exposed via a **micro service** approach. The implementation is done in a separate repository: [the Customer management micro-services](https://github.com/ibm-cloud-architecture/refarch-integration-services). It supports the JAXRS implementation deployed in Liberty as Docker image and the DB2 schema for DB2 data base.
 1. **API product** can be defined on top of the customer management service to monitor API usage and perform API governance. The implementation is supported by IBM API Connect. Some explanation of the product development in [this note](./docs/apim/README.md)
-1. Data scientists use machine learning library and Jupiter notebook, R Studio or Zeppelin on top of Apache Spark in IBM Data Science Experience (DSX) to discover the model. See [This note](./docs/ml-model.md) and [jupyter notebook](https://github.com/ibm-cloud-architecture/refarch-analytics/blob/master/notebooks/CustomerChurn/README.md). For deploying of DSX on ICP see [this detailed section](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/ICP)
+1. Data scientists use machine learning library and Jupiter notebook, R Studio or Zeppelin on top of Apache Spark in IBM Data Science Experience (DSX) to discover the model. See [This note](./docs/ml/README.md) and [jupyter notebook](./docs/ml/CustomerChurnAnalysisCI-bpull.md). For deploying of DSX on ICP see [this detailed section](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/ICP)
 1. The data used by data scientists are persisted in Db2 warehouse. [This note](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/db2warehouse) goes over the creation of the service within IBM Cloud private.
 1. **Ingestion** mechanism can move data, for chat transcripts and customer records to the DB2 warehouse. This process can run on demand when Data Scientists need new data to tune the model. It can be implemented with an ETL, with Java program, or using the Db2 Federation capability. [This note](docs/data/README.md) explains what was done as ingestion using Db2 warehouse.
 
