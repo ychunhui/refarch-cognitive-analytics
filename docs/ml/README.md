@@ -4,9 +4,13 @@
 
 This section outlines the steps to build and deploy an analytical model for predicting customer churn, using the combination of tooling in Watson Data Platform (WDP), and IBM Data Science Experience (DSX). The steps involve gathering data from various sources, aggregating them using Jupyter notebooks, building and training an analytical model, and finally deploying it on Watson Data Platform.
 
-The overall system context for this part of the solution is outlined in the following picture.
+The overall system context for Watson Data Platform part of the solution is outlined in the following picture.
 
 ![system-context-wdp-dsx-wml](system-context-wdp-dsx-wml.png)
+
+For a pure DSX and Db2 Warehouse and Spark cluster inside ICP approach the high level view looks like:
+
+![](syst-ctx-dsx-spark.png)
 
 For the purposes of this exercise, this section shows similar operations (like filling missing values in the dataset) both in WDP and DSX. The reason is to illustrate the capabilities and the art of the possible.
 
@@ -40,7 +44,7 @@ To begin with, open IBM Watson Data Platform (henceforth in this document referr
 
 ![wdp_main](wdp-main-1.png)
 
-Provide name for the project and select the appropriate cloud object storage and the spark instance from your IBM Cloud workspace. Once you have finished the steps, the resulting screen would look like the following. Click on "Create" button on the lower right bottom of the screen. This will create a new WDP project for us to work further. If you have not created an instance of cloud object storage and spark service, create them first before proceeding with this step. 
+Provide name for the project and select the appropriate cloud object storage and the spark instance from your IBM Cloud workspace. Once you have finished the steps, the resulting screen would look like the following. Click on "Create" button on the lower right bottom of the screen. This will create a new WDP project for us to work further. If you have not created an instance of cloud object storage and spark service, create them first before proceeding with this step.
 
 ![wdp-project-create](wdp-project-create.png)
 
@@ -64,9 +68,9 @@ In the screenshot you see all the service instances that are part of IBM Cloud. 
 
 ![wdp-cloudant-connection](wdp-cloudant-connection.png)
 
-Fill in the credentials and click the button "Create" on the lower right corner of the page. To get the credentials for accessing the cloudant instance, you should open your cloudant instance on IBM Cloud. 
+Fill in the credentials and click the button "Create" on the lower right corner of the page. To get the credentials for accessing the cloudant instance, you should open your cloudant instance on IBM Cloud.
 
-Likewise, create two additional connections for DB2Warehouse and Amazon S3. The screen for DB2 Warehouse is shown below. 
+Likewise, create two additional connections for DB2Warehouse and Amazon S3. The screen for DB2 Warehouse is shown below.
 
 ![wdp-db2warehouse-connection](wdp-db2warehouse-connection.png)
 
@@ -100,10 +104,10 @@ That should complete the steps to import the data asset from cloudant. Likewise 
 
 In the previous steps we created datasources, and then imported data assets from each one of them. In this section, we will perform some visualizations to explore the data, and perform simple operations to prepare the data. These steps will be performed using the tool Data Refinery, which is part of the Watson Data Platform.
 
+[See note](CustomerChurnAnalysisCI-bpull.md) of the jupiter notebook exported as markdown file.
+
 ## Analytical Model
 
 ## Appendix 1: Data Catalogs
 
 ## Appendix 2: Performance Monitoring & Fine Tuning
-
-## Appendix 3: Secure Service Gateway to go from public cloud to private cloud

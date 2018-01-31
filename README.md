@@ -128,6 +128,11 @@ The cluster topology with some of the major ICP and solution components will loo
 
 ![](docs/icp-compo.png)
 
+The dashed lines highlight the deployment concept of k8s. The Db2 warehouse is using external Glusterfs cluster for persisting data via the persistent volumes and persistent volume claim.
+
+The spark cluster, master, spawner... are deployments inside ICP and installed via DSX Local.  
+![](icp-dsx-spark.png)
+
 ### Using Watson Data Platform
 As an alternate to use DSX on ICP to develop the machine learning model, Data Scientist can use Watson Data platform to gather the data, persist in public object store and deploy the model once trained to Watson Machine learning.
 
