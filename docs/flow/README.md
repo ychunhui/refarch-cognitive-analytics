@@ -2,7 +2,7 @@
 There are two paths to demonstrate, the model creating, focusing on analytics work from at-rest data, and the end user view of the application.
 
 ## Training the Machine Learning Model
-Customer Information, that is persisted in DB2 running on Z, contains customer’s personal information like age, gender, profession, family, income, and account information like service usage, rate plan and device owned. This is item [7] in diagram below:
+Customer Information, that is persisted in DB2 running on Z or Db2 server, contains customer’s personal information like age, gender, profession, family, income, and account information like service usage, rate plan and device owned. This is item [7] in diagram below:
 
 ![](ML-flow.png)
 
@@ -10,7 +10,8 @@ Customer Information, that is persisted in DB2 running on Z, contains customer�
 
 Customer Information is currently planned to run and be maintained on system Z.
 
-An Extract Transform Load job, or other script running on-premise ingests customer information from DB2 running on mainframe into the DB2 Warehouse running on IBM cloud private on Z. Items [12] in diagram above. (Alternatively, IBM Information Server products can be used to move data). The current implementation is using a Java based implementation of the customer service, using a micro service approach, see the explanation in [this project](https://github.com/ibm-cloud-architecture/refarch-integration-services)
+An Extract Transform Load job, or other script running on-premise ingests customer information from DB2 running on mainframe into the DB2 Warehouse running on IBM cloud private on Z. Items [12] in diagram above. (Alternatively, IBM Information Server products can be used to move data). We have also used the Db2 Warehouse 'remote tables' features to remote connect to the DB2 table (see [this note](../data/README.md) for details).
+The current implementation is using a Java based implementation of the customer service, using a micro service approach, see the explanation in [this project](https://github.com/ibm-cloud-architecture/refarch-integration-services)
 
 IBM DSX running on ICP uses the data persisted in DB2 Warehouse (Item [11]) to train a model to predict customer churn (Item [10]). The machine learning / jupyter notebook explanations are in [this note]().
 
