@@ -32,7 +32,7 @@ The datasets used in this exercise are shown in the data subfolder of this githu
 
 Chrome and Firefox are tested for this exercise and for the examples shown here. Other browsers may or may not work. It is left to the user to check and make sure.
 
-## Data Ingestion & Data Preparation
+## Data Import
 
 Ingestion of data from different data sources requires creating connection to the data sources, and importing the datasets. Preparation of data involves operations inside Data Refinery using the shaper tool. Part of the data preparations are also shown inside DSX.
 
@@ -94,6 +94,11 @@ That should bring you back to the original screen from where you selected the da
 
 ![wdp-data-asset-cloudant](wdp-data-asset-cloudant.png)
 
+That should complete the steps to import the data asset from cloudant. Likewise repeat the steps for the other two data sources to pull the two data assets we need for analytics.
+
+## Data Preparation / Refinement
+
+In the previous steps we created datasources, and then imported data assets from each one of them. In this section, we will perform some visualizations to explore the data, and perform simple operations to prepare the data. These steps will be performed using the tool Data Refinery, which is part of the Watson Data Platform.
 
 ## Analytical Model
 
