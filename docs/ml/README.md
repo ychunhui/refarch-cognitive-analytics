@@ -4,15 +4,20 @@
 
 This section outlines the steps to build and deploy an analytical model for predicting customer churn, using the combination of tooling in Watson Data Platform (WDP), and IBM Data Science Experience (DSX). The steps involve gathering data from various sources, aggregating them using Jupyter notebooks, building and training an analytical model, and finally deploying it on Watson Data Platform.
 
+The overall system context for this part of the solution is outlined in the following picture.
+
+![system-context-wdp-dsx-wml](system-context-wdp-dsx-wml.png)
+
 For the purposes of this exercise, this section shows similar operations (like filling missing values in the dataset) both in WDP and DSX. The reason is to illustrate the capabilities and the art of the possible.
 
 The solution involves three datasets from the analytics standpoint, as outlined below:
-![](3-datasources.png)
+![datasources](3-datasources.png)
+
 1. **Customer Transaction Data**: This data contains the customer's personal information and demographics (age, marital status, income etc.), and the subscription related details (such as phone model, plans, bill type etc.). This information is stored in a DB2 Warehouse database on cloud.
 2. **Customer campaign results**: This dataset includes the results of a marketing campaign conducted by a third part marketing firm for the Telco customers. This is intended to capture the customer's preferred device or feature (such as large display, Android phone etc.) and usage related aspects such as if the customer has multiple phone numbers, and the number of SMS text messages the customer exchanges with his contacts. The notion is, the usage model and preferences, could have a strong influence in any given customer's preference to stay with the provider or leave. As per the scenario in this solution, this data is stored in the data servers of the marketing firm, which is on a third party cloud. The marketing firm makes this dataset available on Amazon S3.
 3. **Call center notes**: This dataset contains a short, summary style description of customer's complaint, two or three important keywords showing the device, feature, and the problem, and the sentiment shown by the customer. In some cases customers simply ask questions such as where the nearest store is. These kinds of entries may have no value for sentiments. These need to be fixed before one can perform analytics. This dataset resides in Cloudant on IBM cloud. Since each customer complaint is a service ticket, which essentially is a document, this data is stored in Cloudant.
 
-As you know, the steps will be mostly aligned with CRISP-DM methodology, but with the main focus on the data preparation and analytics.
+The steps will be mostly aligned with CRISP-DM methodology, but with the main focus on the data preparation and analytics.
 
 ## Prerequisites
 
@@ -32,7 +37,7 @@ Ingestion of data from different data sources requires creating connection to th
 
 To begin with, open IBM Watson Data Platform (henceforth in this document referred to as WDP) using a browser. The main screen should show something like the following:
 
-![wdp_main](./wdp-main-1.png)
+![wdp_main](wdp-main-1.png)
 
 ## Analytical Model
 
