@@ -72,6 +72,29 @@ Likewise, create two additional connections for DB2Warehouse and Amazon S3. The 
 
 Note that there is a checkbox for secure gateway that you can enable if you are accessing the DB2 Warehouse instance behind a firewall.
 
+Once you have created all the three connections, you should be back to the main screen of your project, where you can see all the three connections listed.
+
+The next step is to import the data from these three datasources, using the connection we just created. Click on the toolbar drop down menu "Add to Project" > "Connected Data" as shown in the following picture.
+
+![wdp-data-asset-create-0](wdp-data-asset-create-0.png)
+
+In the resulting screen as shown below, provide a name for the data asset, and click on "Select Source".
+
+![wdp-data-asset-create-1](wdp-data-asset-create-1.png)
+
+That should bring up a page with all the datasaources created in the previous steps.  The following screenshot illustrates this step.
+
+![wdp-data-asset-create-2](wdp-data-asset-create-2.png)
+
+Click on the cloudant based datasource. That would bring up the databases you created on cloudant. Pick the right database, and click on the button "Select" on the lower right corner. The following screenshot shows this part of the operation.
+
+![wdp-data-asset-create-3](wdp-data-asset-create-3.png)
+
+That should bring you back to the original screen from where you selected the datasource. Click on the button "Create" on the lower right corner.
+
+![wdp-data-asset-cloudant](wdp-data-asset-cloudant.png)
+
+
 ## Analytical Model
 
 ## Appendix 1: Data Catalogs
