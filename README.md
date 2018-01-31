@@ -138,9 +138,9 @@ See [this note](docs/ml/README.md) for detail about the implementation of the mo
 ### Using Data Service as Z Connect service
 For Z OS deployment the solution looks like the diagram below, where the data service and DB2 are running on Z OS.
 
-![](docs/deployment-cfg2.png)
+![](docs/Z/deployment-cfg2.png)
 
-[This note](docs/zconnect.md) details the Z Connect implementation.
+[This note](docs/Z/README.md) details the Z Connect implementation.
 
 # Further readings
 * [Data Analysis using Spark on zOS and Jupyter Notebooks](https://github.com/IBM/Spark-on-zOS)
