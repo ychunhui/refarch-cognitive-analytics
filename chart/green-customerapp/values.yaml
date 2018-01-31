@@ -34,8 +34,9 @@ config:
     workspace: a97a02e3-d3c3-48de-8e64-20502819e582
     usePersistence: false
   customerAPI:
-    url: http://greencustomerms-green-customerms:9080/caseserv/api/v1
+    url: https://172.16.50.8:443/csplab/sb
     host: greencustomerms-green-customerms
+    xibmclientid: d6ef6d26-f017-42e6-b703-1d8aecfe1834
   toneAnalyzer:
     url: https://gateway.watsonplatform.net/tone-analyzer/api
     versionDate: 2017-09-21
