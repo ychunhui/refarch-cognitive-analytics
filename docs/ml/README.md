@@ -11,6 +11,7 @@ The overall system context for this part of the solution is outlined in the foll
 For the purposes of this exercise, this section shows similar operations (like filling missing values in the dataset) both in WDP and DSX. The reason is to illustrate the capabilities and the art of the possible.
 
 The solution involves three datasets from the analytics standpoint, as outlined below:
+
 ![datasources](3-datasources.png)
 
 1. **Customer Transaction Data**: This data contains the customer's personal information and demographics (age, marital status, income etc.), and the subscription related details (such as phone model, plans, bill type etc.). This information is stored in a DB2 Warehouse database on cloud.
@@ -38,6 +39,38 @@ Ingestion of data from different data sources requires creating connection to th
 To begin with, open IBM Watson Data Platform (henceforth in this document referred to as WDP) using a browser. The main screen should show something like the following:
 
 ![wdp_main](wdp-main-1.png)
+
+Provide name for the project and select the appropriate cloud object storage and the spark instance from your IBM Cloud workspace. Once you have finished the steps, the resulting screen would look like the following. Click on "Create" button on the lower right bottom of the screen. This will create a new WDP project for us to work further. If you have not created an instance of cloud object storage and spark service, create them first before proceeding with this step. 
+
+![wdp-project-create](wdp-project-create.png)
+
+What you just created is a WDP project, in which you will be creating artifacts such as connections to datasources, datasets, notebooks, catalogs, analytical models etc.
+
+After creating the project, you should now be looking at the main screen where you see a list of projects. Click on the newly created project, and you should be seeing a page like the following.
+
+![wdp-project-content](wdp-project-content.png)
+
+From the tool bar on the right, click on the drop down box "Add to project" and then click on the menu "connection". This is illustrated in the following picture.
+
+![wdp-connection-create](wdp-connection-create.png)
+
+It should take you to a screen where you can see all the datsources supported by WDP. For this example, you will be creating three datasources - cloudant, DB2 Warehouse, and Amazon S3. Each one of these sources contain a particular dataset as described in the section at the introduction section. Note that if you have your data in different systems, choose those systems.
+
+Click on Cloudant database and add it as a connection. The following two screenshots show this step. If you have not created a cloudant instance on IBM Cloud, you should do that first before resuming from this step.
+
+![wdp-data-sources-cloudant](wdp-datasources-cloudant.png)
+
+In the screenshot you see all the service instances that are part of IBM Cloud. You can click on "IBM Cloudant" option as highlighted, and proceed to fill in the credentials. Your screen should look like the following after clicking "IBM Cloudant".
+
+![wdp-cloudant-connection](wdp-cloudant-connection.png)
+
+Fill in the credentials and click the button "Create" on the lower right corner of the page. To get the credentials for accessing the cloudant instance, you should open your cloudant instance on IBM Cloud. 
+
+Likewise, create two additional connections for DB2Warehouse and Amazon S3. The screen for DB2 Warehouse is shown below. 
+
+![wdp-db2warehouse-connection](wdp-db2warehouse-connection.png)
+
+Note that there is a checkbox for secure gateway that you can enable if you are accessing the DB2 Warehouse instance behind a firewall.
 
 ## Analytical Model
 
