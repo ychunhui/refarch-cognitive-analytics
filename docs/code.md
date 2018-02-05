@@ -244,5 +244,5 @@ kubectl config use-context greencluster.icp-context
 * Test by accessing the URL: `http://http://greenapp.green.case/`
 
 
-## Customer Micro service
+## Customer Microservice
 The back end customer management function is a micro service in its separate repository, and the code implementation explanation can be read [here.](https://github.com/ibm-cloud-architecture/refarch-integration-services#code-explanation)

@@ -4,7 +4,7 @@
 replicaCount: 1
 image:
   repository: greencluster.icp:8500/greencompute/greenapp
-  tag: v0.0.1
+  tag: v0.0.2
   pullPolicy: Always
 service:
   name: greenapppsvc
