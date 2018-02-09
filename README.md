@@ -1,11 +1,11 @@
 # Customer analysis with cognitive and analytics in hybrid cloud
 The goal of this implementation is to deliver a reference implementation for data management and service integration to consume structured and unstructured data to assess customer attrition.
-Modern applications are leveraging a set of capabilities to do a better assessment of customer characteristics and deliver best actions or recommendations. The technologies involved, include artificial intelligence, data governance, ingestion, enrichment, storage, analysis, machine learning, unstructured data classifications, natural language understanding, image recognition, speech to text, tone analysis....
+Modern applications are leveraging a set of capabilities to do a better assessment of customer characteristics and deliver best actions or recommendations. The technologies involved, include artificial intelligence, data governance, ingestion, enrichment, storage, analysis, machine learning, unstructured data classifications, natural language understanding, tone analysis, and hybrid integration....
 
 Update 01/31/18: The solution is not a lab or complete end to end tutorial...yet...
 
 ## Target audience
-* Architects who want to understand the components involved and the architecture constraints and design considerations
+* IT Architects who want to understand the components involved and the architecture constraints and design considerations
 * Developers who want to get starting code, and educate themselves on the related technologies
 * Data Scientists who want to complement machine learning with cognitive output like classification  
 
@@ -28,7 +28,7 @@ Update 01/31/18: The solution is not a lab or complete end to end tutorial...yet
 * [Further readings](#further-readings)
 
 ## Presentation
-### Use case
+### An unhappy customer
 Eddie is an existing Green Telco Inc customer living in Orlando Fl.  He has been using the services provided by the Green Telco for the last 2 years. Currently, he is not under any contract.  Eddie signed for a new phone which was "buy one get one" free bundle. He bought one of the phone with cash and he put the other phone on a monthly plan. For Eddie to get the second phone free he has to submit the receipt to the Green Telco to get an equivalent value of the phone as a credit card. Eddie was traveling to conferences in Madrid and in Bangkok so he also signed up for international text and data service.  
 
 So he owns two phones:  
