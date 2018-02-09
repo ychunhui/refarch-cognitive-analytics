@@ -30,7 +30,7 @@ Before beginning the exercise, make sure you have accounts in the following syst
 
 1. [IBM Cloud](http://www.bluemix.net)
 2. [Watson Data Platform](http://dataplatform.ibm.com)
-3. [IBM Datascience Experience](http://datascience.ibm.com) - If you register for access in Watson Data Platform, you will get access to IBM datascience experience. As an alternate use the DSX on IBM Cloud Private  instance.
+3. [IBM Data Science Experience](http://datascience.ibm.com) - If you register for access in Watson Data Platform, you will get access to IBM data science experience. As an alternate use the DSX on IBM Cloud Private instance.
 
 The datasets used in this exercise are shown in the data subfolder of this github repository. It is assumed you know how to create instances of services on IBM Cloud (Cloudant, DB2 Warehouse), and Amazon S3. Those steps are not outlined in the following sections, and for guidance with those services, the user is advised to check the documentation.
 
