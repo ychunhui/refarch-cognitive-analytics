@@ -15,12 +15,11 @@
  */
  /**
  Delegate to a customer churn scoring service.
- Update 01/18/2018
+ Update 02/09/2018
  */
 
- var https=require('https');
-
- const request = require('request')
+const request = require('request')
+var customerService = require('./customerProxy')
 
  var buildOptions=function(met,aPath,config){
    return {
@@ -52,11 +51,18 @@
 
 
  module.exports = {
-   scoreCustomer : function(config,req,res,next){
+   scoreCustomer : function(config,req,next){
      //var opts = buildOptions('GET','/c/',config);
      //opts.headers['Content-Type']='multipart/form-data';
      //processRequest(res,opts);
-     console.log("Call churn scoring service for "+req.body);
-     next({"score":0.77})
+     console.log("Call churn scoring service for "+req.user);
+     customerService.getCustomerDetail(config,req.user.email).then(function(response) {
+       console.log(response)
+       // do data preparation
+       // call the WML service
+       next({"score":0.77})
+     }).catch(function(error){
+       console.error(error)
+     })
    }
 } // exports

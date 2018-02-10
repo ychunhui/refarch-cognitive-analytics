@@ -1,4 +1,4 @@
-# Data ingestion
+# Data Ingestion
 For data ingestion we have multiple choices to move data from DB2 to Db2 warehouse, Cloudant to Db2 warehouse. The appraoch will depend of the number of records to load, the frequency of data movement, and the overall size. This data movement is motivated by the Data Scientist work to select the best algorithm to classify customers into churn or not.
 For this solution we have used the following approach
 * churn settings were done by marketing group on existing 3000 customer records.
