@@ -190,6 +190,11 @@ getCustomerByEmail : function(config,req,res){
 }
 
 ```
+
+### Churn risk Scoring
+The scoring is done by deploying a trained model as a service. We have two clients, one for Watson Data Platform and one for Spark cluster on ICP.
+The interface is the same so it is easy to change implementation. 
+
 ### ICP deployment
 For this web application we are following the same steps introduced within the [Brown Case Web app application](https://github.com/ibm-cloud-architecture/refarch-caseinc-app/blob/master/docs/icp/README.md) and can be summarized as:
 * Compile the app: `ng build`

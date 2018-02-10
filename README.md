@@ -2,7 +2,7 @@
 The goal of this implementation is to deliver a reference implementation for data management and service integration to consume structured and unstructured data to assess customer attrition.
 Modern applications are leveraging a set of capabilities to do a better assessment of customer characteristics and deliver best actions or recommendations. The technologies involved, include artificial intelligence, data governance, ingestion, enrichment, storage, analysis, machine learning, unstructured data classifications, natural language understanding, tone analysis, and hybrid integration....
 
-Update 01/31/18: The solution is not a lab or complete end to end tutorial...yet...
+Update 02/09/18 (happy birthday Mamee): The solution is not a lab or complete end to end tutorial...yet...
 
 ## Target audience
 * IT Architects who want to understand the components involved and the architecture constraints and design considerations
@@ -75,9 +75,11 @@ From above figure left to right the components involved are:
 1. The customer [data](https://github.com/ibm-cloud-architecture/refarch-integration-services#data-model) are persisted in on-premise server with relational database. We are using DB2 on-premise server for that. To read how the database was created see [the note in this repository](https://github.com/ibm-cloud-architecture/refarch-integration-services/blob/master/docs/DB2Creation.md)
 1. Customer data are exposed via a **micro service** approach. The implementation is done in a separate repository: [the Customer management micro-services](https://github.com/ibm-cloud-architecture/refarch-integration-services). It supports the JAXRS implementation deployed in Liberty as Docker image and the DB2 schema for DB2 data base.
 1. **API product** can be defined on top of the customer management service to monitor API usage and perform API governance. The implementation is supported by IBM API Connect. Some explanation of the product development in [this note](./docs/apim/README.md)
-1. Data scientists use machine learning library and Jupiter notebook, R Studio or Zeppelin on top of Apache Spark in IBM Data Science Experience (DSX) to discover the model. See [This note](./docs/ml/README.md) and [jupyter notebook](./docs/ml/CustomerChurnAnalysisCI-bpull.md). For deploying of DSX on ICP see [this detailed section](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/ICP)
-1. The data used by data scientists are persisted in Db2 warehouse. [This note](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/db2warehouse) goes over the creation of the service within IBM Cloud private.
-1. **Ingestion** mechanism can move data, for chat transcripts and customer records to the DB2 warehouse. This process can run on demand when Data Scientists need new data to tune the model. It can be implemented with an ETL, with Java program, or using the Db2 Federation capability. [This note](docs/data/README.md) explains what was done as ingestion using Db2 warehouse.
+1. Data scientists use machine learning library and Jupiter notebook, R Studio or Zeppelin on top of Apache Spark in IBM Data Science Experience (DSX) to discover the model. We are documenting two different approaches:
+  * One based on Watson Data Platform running on IBM Cloud and described in [This note](./docs/ml/README.md) with [a jupyter notebook](./docs/ml/CustomerChurnAnalysisCI-bpull.md).
+  * One based on [Private cloud using DSX and Db2 warehouse](docs/ml/icp-dsx-ml-model.md).
+1. The data used by data scientists are persisted in Db2 warehouse. [This note](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/db2warehouse) goes over the creation of the Db2 warehouse release within IBM Cloud private.
+1. **Ingestion** mechanism can move data, for chat transcripts and customer records to the DB2 warehouse. This process can run on demand when Data Scientists need new data to tune the model. It can be implemented with an ETL, with Java program, or using the Db2 Federation capability. [This note](docs/data/README.md) explains what was done to move DB2 customer data to Db2 warehouse.
 
 ### Demonstration Script
 As an executable solution, we are presenting the demonstration script in a [separate note.](docs/flow/README.md). You need to have a running environment or being able to access our IBM internal environment for that.
@@ -131,7 +133,7 @@ The cluster topology with some of the major ICP and solution components will loo
 The dashed lines highlight the deployment concept of k8s. The Db2 warehouse is using external Glusterfs cluster for persisting data via the persistent volumes and persistent volume claim.
 
 The spark cluster, master, spawner... are deployments inside ICP and installed via DSX Local.  
-![](icp-dsx-spark.png)
+![](docs/icp-dsx-spark.png)
 
 ### Using Watson Data Platform
 As an alternate to use DSX on ICP to develop the machine learning model, Data Scientist can use Watson Data platform to gather the data, persist in public object store and deploy the model once trained to Watson Machine learning.
