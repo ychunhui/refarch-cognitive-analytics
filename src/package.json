@@ -58,6 +58,7 @@
     "@angular/compiler-cli": "^4.0.0",
     "@angular/language-service": "^4.0.0",
     "typescript": "~2.3.3",
+    "btoa": "",
     "lite-server": "^2.2.2",
     "@types/node": "~6.0.60",
     "chai": "^3.5.0",

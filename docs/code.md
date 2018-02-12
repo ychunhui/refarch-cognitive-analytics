@@ -190,6 +190,64 @@ getCustomerByEmail : function(config,req,res){
 }
 
 ```
+
+### Churn risk Scoring
+The scoring is done by deploying a trained model as a service. We have two clients, one for Watson Data Platform and one for Spark cluster on ICP.
+The interface is the same so it is easy to change implementation. 
+
 ### ICP deployment
-## Customer Micro service
+For this web application we are following the same steps introduced within the [Brown Case Web app application](https://github.com/ibm-cloud-architecture/refarch-caseinc-app/blob/master/docs/icp/README.md) and can be summarized as:
+* Compile the app: `ng build`
+* Create docker images: `docker build -t ibmcase/greenapp . `
+* Tag the image with the docker repository name, version: `docker tag ibmcase/greenapp greencluster.icp:8500/greencompute/greenapp:v0.0.2`
+* Push the docker images to the docker repository running on the Master node of ICP:
+```
+$ docker login greencluster.icp:8500
+$ docker push greencluster.icp:8500/greencompute/greenapp:v0.0.2
+```
+* Be sure the parameter of the config object in the `values.yaml` for the kubernetes deployment use the values of the environment.
+```yaml
+config:
+  conversation:
+    version: v1
+    versionDate: 2017-05-26
+    username: 291d9
+    password: ss
+    conversationId: Complex Relocation
+    workspace: a92
+    usePersistence: false
+  customerAPI:
+    url: https://172.16.50.8:443/csplab/sb
+    host: greencustomerms-green-customerms
+    xibmclientid: <>
+  toneAnalyzer:
+    url: https://gateway.watsonplatform.net/tone-analyzer/api
+    versionDate: 2017-09-21
+    username: <>
+    password: <>
+  dbCredentials:
+    url: https://<>
+```
+In the settings above the URL for the customer API is going to the API gateway.
+
+* Change the virtual hostname if you want to. The current name is `greenapp.green.case`, and if you have existing Ingress rule that defines the same hostname, you need to take care of that.
+* Be sure to be connected to the kubernete server with commands like:
+```
+kubectl config set-cluster greencluster.icp --server=https://172.16.40.130:8001 --insecure-skip-tls-verify=true
+kubectl config set-context greencluster.icp-context --cluster=greencluster.icp
+kubectl config set-credentials admin --token=<>
+kubectl config set-context greencluster.icp-context --user=admin --namespace=browncompute
+kubectl config use-context greencluster.icp-context
+
+```
+* Install the Helm release with the greencompute namespace: `helm install green-customerapp --name green-customerapp --namespace greencompute`
+
+![](greeapp-deployed.png)
+
+* Be sure you have name resolution from the hostname you set in values.yaml and IP address of the ICP proxy. Use your local '/etc/hosts' file for that. In production, set your local DNS with this name resolution.
+
+* Test by accessing the URL: `http://http://greenapp.green.case/`
+
+
+## Customer Microservice
 The back end customer management function is a micro service in its separate repository, and the code implementation explanation can be read [here.](https://github.com/ibm-cloud-architecture/refarch-integration-services#code-explanation)
