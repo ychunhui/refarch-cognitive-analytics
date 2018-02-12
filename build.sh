@@ -10,7 +10,7 @@ else
   v=$prev
 fi
 echo $v
-
+ 
 cd src
 
 # Update client version

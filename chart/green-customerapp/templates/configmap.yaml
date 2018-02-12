@@ -17,7 +17,9 @@ data:
             "usePersistence": "{{ .Values.config.conversation.usePersistence }}"
           },
         "customerAPI":{
-              "url":"{{ .Values.config.customerAPI.url }}"
+              "url":"{{ .Values.config.customerAPI.url }}",
+              "host":"{{ .Values.config.customerAPI.host }}",
+              "xibmclientid": "{{ .Values.config.customerAPI.xibmclientid }}"
         },
         "toneAnalyzer":{
               "url": "{{ .Values.config.toneAnalyzer.url }}" ,

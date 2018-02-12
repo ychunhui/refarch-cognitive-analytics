@@ -14,8 +14,6 @@
  * limitations under the License.
  * Jerome Boyer IBM boyerje@us.ibm.com
  */
-var https=require('https');
-
 const request = require('request').defaults({strictSSL: false});
 
 
@@ -57,10 +55,20 @@ module.exports = {
     opts.headers['Content-Type']='multipart/form-data';
     processRequest(res,opts);
   },
-  getCustomerByEmail : function(config,req,res){
-    var opts = buildOptions('GET','/customers/email/'+req.params.email,config);
+  getCustomerByEmail : function(config,email,res){
+    var opts = buildOptions('GET','/customers/email/'+email,config);
     opts.headers['Content-Type']='multipart/form-data';
     processRequest(res,opts);
+  },
+  getCustomerDetail : function(config,email) {
+      return new Promise(function(resolve, reject){
+          var opts = buildOptions('GET','/customers/email/'+email,config);
+          opts.headers['Content-Type']='multipart/form-data';
+          request(opts,function (error, response, body) {
+            if (error) {reject(error)}
+            resolve(body);
+          });
+      });
   },
   newCustomer : function(config,req,res){
     var opts = buildOptions('POST','/customers',config);

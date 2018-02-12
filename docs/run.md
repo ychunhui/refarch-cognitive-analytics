@@ -114,7 +114,9 @@ data:
         "usePersistence": "{{ .Values.config.conversation.usePersistence }}"
       },
     "customerAPI":{
-          "url":"{{ .Values.config.customerAPI.url }}"
+          "url":"{{ .Values.config.customerAPI.url }}",
+          "host":"{{ .Values.config.customerAPI.host }}",
+          "xibmclientid": "{{ .Values.config.customerAPI.xibmclientid }}"
     },
     "toneAnalyzer":{
           "url": "{{ .Values.config.toneAnalyzer.url }}" ,
@@ -177,3 +179,17 @@ Assess deployment is successful:
 ```
 $ kubectl logs <pod name> --namespace greencompute
 ```
+
+
+### Run the Jupyter notebook
+The main root project for green compute includes a dockerfile to get all the interesting components you may want to run to execute and develop Jupyter notebooks on your own. If you use `docker build -t pysparktf .`, you should get the image with python, sklearn, all spark python modules and even Tensorflow.
+
+```
+REPOSITORY                           TAG         IMAGE ID            CREATED             SIZE
+pysparktf                            latest      ee5d45e40097        2 months ago        5.29G
+pyspark                              latest      06821066e790        3 months ago        5.01GB
+jupyter/pyspark-notebook             latest      f4f7de14d4a7        3 months ago        4.56GB
+
+```
+
+From those docker images you can run a container that mounts your local folder where you have notebook under the work folder. The script `./startLocalJupyter.sh`, and then run the kernel.

@@ -9,13 +9,21 @@
     "usePersistence": false
   },
   "customerAPI":{
-      "url":"http://customer.green.case/caseserv/api/v1",
-      "host":"customer.green.case"
+      "url":"https://172.16.50.8:443/csplab/sb",
+      "host":"customer.green.case",
+      "xibmclientid": "d6ef6d26-f017-42e6-b703-1d8aecfe1834"
   },
   "toneAnalyzer":{
       "url": "https://gateway.watsonplatform.net/tone-analyzer/api",
       "username": "3e...",
       "password": "z..."
+  },
+  "scoringService":{
+    "type":"WML",
+    "baseUrl": "https://ibm-watson-ml.mybluemix.net",
+    "instance": "/v3/wml_instances/e947215d-9d96-48d0-bdce-d50e9431ca80/published_models/face8a83-b3e2-4cee-9b5e-76aaf01b3b78/deployments/3233874f-e8bd-459d-afa3-ab1d9ca148f9/online",
+    "username": "",
+    "password": ""
   },
   "dbCredentials" : {
     "url": "https://...-bluemix:cd....@...e50-bluemix.cloudant.com"

@@ -33,11 +33,11 @@ module.exports = {
               if (config.debug) {console.log('Tone Analyzer '+ JSON.stringify(toneArep));}
               req.body.context["ToneAnalysisResponse"]=toneArep.utterances_tone[0].tones[0];
               if (req.body.context["ToneAnalysisResponse"].tone_name === "Frustrated") {
-                churnScoring.scoreCustomer(config,req,res,function(score){
-                    req.body.context["ChurnScore"]=score;
-                })
+                churnScoring.scoreCustomer(config,req,function(score){
+                          req.body.context["ChurnScore"]=score;
+                          sendToWCSAndBackToUser(config,req,res);
+                    })
               }
-              sendToWCSAndBackToUser(config,req,res);
         }).catch(function(error){
               console.log(error);
           if (error.Error !== undefined) {
