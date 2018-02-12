@@ -19,6 +19,13 @@
         "username": "3edad474-c386-429e-84e7-9097fcd3e328",
         "password": "zXfeNcN0zWQK"
     },
+    "scoringService":{
+      "type":"WML",
+      "baseUrl": "https://ibm-watson-ml.mybluemix.net",
+      "instance": "/v3/wml_instances/e947215d-9d96-48d0-bdce-d50e9431ca80/published_models/face8a83-b3e2-4cee-9b5e-76aaf01b3b78/deployments/3233874f-e8bd-459d-afa3-ab1d9ca148f9/online",
+      "username": "02f481c2-7717-4e79-b60f-3c1214b5f374",
+      "password": "f2f9349b-ebb5-4dfd-9318-94615a06fffb"
+    },
     "dbCredentials" : {
       "url": "https://01bcc074-b3a0-4b07-93c6-eade6fb3ce50-bluemix:cd68d33a28d499bc6211810a56a0b99393a699190630f7811c438149be944500@01bcc074-b3a0-4b07-93c6-eade6fb3ce50-bluemix.cloudant.com"
     },
