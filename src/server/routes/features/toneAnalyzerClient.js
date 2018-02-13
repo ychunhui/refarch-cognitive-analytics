@@ -14,7 +14,6 @@
  * limitations under the License.
  * Jerome Boyer IBM boyerje@us.ibm.com
  */
-var https=require('https');
 var ToneAnalyzerV3=require('watson-developer-cloud/tone-analyzer/v3');
 
 var buildOptions = function(config){
@@ -35,7 +34,7 @@ module.exports = {
 
           tone_analyzer.tone_chat(params, function(error, response) {
             if (error) {
-              console.log('error:', error);
+              console.error('error:', error);
               reject(null,error);
             }
             else {

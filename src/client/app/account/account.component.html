@@ -3,6 +3,9 @@
       <li class=""><a [routerLink]="['/']">Home</a></li>
   </ul>
 </div>
+<div *ngIf="error">
+  <h3>{{error}}</h3>
+</div>
 <div *ngIf="customer">
   <div class="row">
     <div class="col-lg-12">
