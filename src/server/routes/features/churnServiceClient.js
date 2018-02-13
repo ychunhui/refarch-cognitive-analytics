@@ -65,19 +65,24 @@ var customerService = require('./customerProxy')
      record.push("N");
    }
 
-   record.push(custRecord.age);
-   record.push(custRecord.maritalStatus);
+   //record.push(custRecord.age);
+   record.push(24);
+   if (custRecord.maritalStatus === 'Familly') {
+     record.push("Married");
+   } else {
+     record.push(custRecord.maritalStatus);
+   }
+
    record.push("95051"); // TODO need to get zipcode in backend
    record.push(custRecord.longDistance);
    record.push(custRecord.international);
    record.push(custRecord.local);
-   record.push(custRecord.longDistance);
    record.push(custRecord.dropped);
    record.push(custRecord.paymentMethod);
    record.push(custRecord.localBillType);
    record.push(custRecord.longDistanceBillType);
    record.push(custRecord.usage);
-   record.push(custRecord.ratePlan);
+   record.push(parseInt(custRecord.ratePlan));
    const devices = custRecord.devicesOwned;
    record.push(devices[0].productName);
    record.push("None"); // TODO need to get  preference
@@ -88,53 +93,58 @@ var customerService = require('./customerProxy')
 
 
 var getScoring = function(config,data){
-  request({
-    url:config.scoringService.baseUrl+ "/v3/identity/token",
-    method: "GET",
-    headers: {
-      accept: 'application/json',
-      'Content-Type': 'application/json;charset=UTF-8',
-      Authorization: "Basic " + btoa(config.scoringService.username + ":" + config.scoringService.password)
-    }},
-   function(error,response,body){
-        const token=JSON.parse(body).token;
-        console.log("Got the token... call the scoring "+body);
-        // now call the scoring
-        var payload = {"fields": ["Sentiment", "Keyword_Component", "Keyword_Query", "ID", "Gender", "Children", "Income", "CarOwnership", "Age", "MaritalStatus", "zipcode", "LongDistance", "International", "Local", "Dropped", "Paymethod", "LocalBilltype", "LongDistanceBilltype", "Usage", "RatePlan", "DeviceOwned", "Preference", "OMPN", "SMSCount"]};
-        payload.values=new Array(data);
-        console.log(JSON.stringify(payload));
-        const scoring_url = config.scoringService.baseUrl+config.scoringService.instance;
-        request({url:scoring_url,
-              method:"POST",
-              headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/json;charset=UTF-8',
-                Authorization: 'Bearer '+token
-              },
-              body: JSON.stringify(payload)
-            },function(error,response,body){
-                const result = JSON.parse(body)
-                console.log(result)
-                const churnIdx=result.values[0][43]
-                const churn=result.values[0][44]
-                console.log(churn+" "+result.values[0][42][churnIdx])
-                return result.values[0][42][churnIdx]
-              }
-        )
+  return new Promise(function(resolve, reject){
+      request({
+        url:config.scoringService.baseUrl+ "/v3/identity/token",
+        method: "GET",
+        headers: {
+          accept: 'application/json',
+          'Content-Type': 'application/json;charset=UTF-8',
+          Authorization: "Basic " + btoa(config.scoringService.username + ":" + config.scoringService.password)
+        }},
+       function(error,response,body){
+            const token=JSON.parse(body).token;
+            console.log("Got the token... call the scoring "+body);
+            // now call the scoring
+            var payload = {"fields": ["Sentiment", "Keyword_Component", "Keyword_Query", "ID", "Gender", "Children", "Income", "CarOwnership", "Age", "MaritalStatus", "zipcode", "LongDistance", "International", "Local", "Dropped", "Paymethod", "LocalBilltype", "LongDistanceBilltype", "Usage", "RatePlan", "DeviceOwned", "Preference", "OMPN", "SMSCount"]};
+            payload.values=new Array(data);
+            console.log(JSON.stringify(payload));
+            const scoring_url = config.scoringService.baseUrl+config.scoringService.instance;
+            request({url:scoring_url,
+                  method:"POST",
+                  headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json;charset=UTF-8',
+                    Authorization: 'Bearer '+token
+                  },
+                  body: JSON.stringify(payload)
+                },function(error,response,body){
+                    const result = JSON.parse(body)
+                    console.log(result)
+                    const churnIdx=result.values[0][43]
+                    const churn=result.values[0][44]
+                    console.log(churn+" "+result.values[0][42][churnIdx])
+                    resolve(result.values[0][42][churnIdx]);
+                  }
+            ) // scoring request
   })
-}
+  });
+} // get scoring
 
  module.exports = {
    scoreCustomer : function(config,req,next){
      console.log("Call churn scoring service for "+JSON.stringify(req.user));
      customerService.getCustomerDetail(config,req.user.email).then(function(response) {
-       console.log("Get customer data:"+response)
-       // do data preparation
-       const toScore=mapData(req.body.context["ToneAnalysisResponse"].tone_id,JSON.parse(response))
-       // call the WML service
-       console.log("data:"+toScore)
-       const score = getScoring(config,toScore);
-       next({"score":score})
+         console.log("Get customer data:"+response)
+         // do data preparation
+         const toScore=mapData(req.body.context["ToneAnalysisResponse"].tone_id,JSON.parse(response))
+         // call the WML service
+         console.log("data:"+toScore)
+         const score = getScoring(config,toScore).then(function(score){
+            next({"score":score})
+         }).catch(function(error){
+             next({"score":.5})
+         });
      }).catch(function(error){
        console.error(error)
      })
