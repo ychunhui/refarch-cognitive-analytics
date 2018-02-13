@@ -25,7 +25,7 @@ const router = express.Router();
 var fs = require('fs');
 var path = require('path');
 const customer    = require('./features/customerProxy');
-const conversation = require('./features/conversation');
+const chatBot = require('./features/chatBot');
 
 module.exports = function(app,config){
 
@@ -37,28 +37,12 @@ module.exports = function(app,config){
   })
 
   app.post('/api/c/conversation',isLoggedIn,(req,res) => {
-    conversation.itSupport(config,req,res)
+    chatBot.chat(config,req,res)
   });
 
 
   app.get('/api/cust/customers/email/:email',isLoggedIn, (req,res) => {
     customer.getCustomerByEmail(config,req.params.email,res);
-  })
-
-  app.get('/api/cust/customers', isLoggedIn,(req,res) => {
-    customer.getCustomers(config,req,res);
-  })
-  app.post('/api/cust/customers',isLoggedIn, (req,res) => {
-    customer.newCustomer(config,req,res);
-  })
-  app.get('/api/cust/customers/:id',isLoggedIn, (req,res) => {
-    customer.getCustomer(config,req,res);
-  })
-  app.put('/api/cust/customers', isLoggedIn,(req,res) => {
-    customer.saveCustomer(config,req,res);
-  })
-  app.delete('/api/cust/customers/:id', isLoggedIn, (req,res) => {
-    customer.deleteCustomer(config,req,res);
   })
 } // exports
 
