@@ -10,7 +10,7 @@ else
   v=$prev
 fi
 echo $v
- 
+
 cd src
 
 # Update client version
@@ -31,3 +31,4 @@ cd ../chart/green-customerapp
 a=$(grep 'version' Chart.yaml)
 sed -i -e 's/"$a"/version: "$v"/g' Chart.yaml
 ## same for the tag in values.yaml
+sed -i -e s/$prev/$v/g values.yaml
