@@ -23,9 +23,17 @@ data:
         },
         "toneAnalyzer":{
               "url": "{{ .Values.config.toneAnalyzer.url }}" ,
+              "versionDate": "{{ .Values.config.toneAnalyzer.versionDate }}",
               "username": "{{ .Values.config.toneAnalyzer.username }}",
               "password": "{{ .Values.config.toneAnalyzer.password }}"
         },
+        "scoringService":{
+            "type": "{{ .Values.config.scoringService.type }}",
+            "baseUrl": "{{ .Values.config.scoringService.baseUrl }}",
+            "instance": "{{ .Values.config.scoringService.instance }}",
+            "username": "{{ .Values.config.scoringService.username }}",
+            "password": "{{ .Values.config.scoringService.password }}"
+          },
         "dbCredentials" : {
             "url": "{{ .Values.config.dbCredentials.url }}"
         },

@@ -76,8 +76,8 @@ From above figure left to right the components involved are:
 1. Customer data are exposed via a **micro service** approach. The implementation is done in a separate repository: [the Customer management micro-services](https://github.com/ibm-cloud-architecture/refarch-integration-services). It supports the JAXRS implementation deployed in Liberty as Docker image and the DB2 schema for DB2 data base.
 1. **API product** can be defined on top of the customer management service to monitor API usage and perform API governance. The implementation is supported by IBM API Connect. Some explanation of the product development in [this note](./docs/apim/README.md)
 1. Data scientists use machine learning library and Jupiter notebook, R Studio or Zeppelin on top of Apache Spark in IBM Data Science Experience (DSX) to discover the model. We are documenting two different approaches:
-  * One based on Watson Data Platform running on IBM Cloud and described in [This note](./docs/ml/README.md) with [a jupyter notebook](./docs/ml/CustomerChurnAnalysisCI-bpull.md).
-  * One based on [Private cloud using DSX and Db2 warehouse](docs/ml/icp-dsx-ml-model.md).
+   * One based on Watson Data Platform running on IBM Cloud and described in [This note](./docs/ml/README.md) with [a jupyter notebook](./docs/ml/CustomerChurnAnalysisCI-bpull.md).
+   * One based on [Private cloud using DSX and Db2 warehouse](docs/ml/icp-dsx-ml-model.md).
 
 1. The data used by data scientists are persisted in Db2 warehouse. [This note](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/db2warehouse) goes over the creation of the Db2 warehouse release within IBM Cloud private.
 1. **Ingestion** mechanism can move data, for chat transcripts and customer records to the DB2 warehouse. This process can run on demand when Data Scientists need new data to tune the model. It can be implemented with an ETL, with Java program, or using the Db2 Federation capability. [This note](docs/data/README.md) explains what was done to move DB2 customer data to Db2 warehouse.
