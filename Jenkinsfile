@@ -3,9 +3,8 @@ pipeline {
     stages {
         stage('build') {
             steps {
-                sh 'npm install'
-                sh 'npm run build'
-                sh 'build.sh'
+                sh 'cd src;npm install'
+                sh 'cd ..;build.sh'
             }
         }
     }

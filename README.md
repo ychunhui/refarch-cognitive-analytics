@@ -157,7 +157,7 @@ For Z OS deployment the solution looks like the diagram below, where the data se
 
 # Further readings
 * [Data Analysis using Spark on zOS and Jupyter Notebooks](https://github.com/IBM/Spark-on-zOS)
-*
+* [DSX](https://datascience.ibm.com/)
 
 # Contribute
 We welcome your contribution. There are multiple ways to contribute: report bugs and improvement suggestion, improve documentation and contribute code.
