@@ -45,12 +45,10 @@ $ ng build
 or
 $ npm run build
 ```
-When involving a continuous integration using Jenkins the jenkins file executes the script in the good order:
+When involving a continuous integration using Jenkins, the jenkins file executes the script in the good order:
 ```
 stage('build') {
     steps {
-        sh 'npm install'
-        sh 'npm run build'
         sh 'build.sh'
     }
 }
@@ -58,6 +56,17 @@ stage('build') {
 When compiling the angular typescripts the javascript code generated is saved under `dist` folder. It will be packaged when a docker image is built.
 
 We have added a build.sh shell script which uses a version number (0.0.6) to build the docker image with good tagging and modify the helm chart with the good tag reference.
+### Jenkins pipeline
+We deployed a Jenkins server on IBM Cloud Private following the instructions [here](https://github.com/ibm-cloud-architecture/refarch-integration/tree/master/docs/devops#jenkins-on-icp).
+The webapp and customer service projects have jenkinsfile that can be used in a Jenkins Pipeline. Pipelines are made up of multiple steps that allow you to build, test and deploy applications.
+
+![](green-web-pipeline.png)
+
+Then define the URL of the github repository and specify the branch to checkout.
+
+![](pipeline-web.png)
+The pipeline is created. You can manually start the build job that runs the pipeline. The job pulls the code from Git repository's master branch and runs the Jenkins file. Then, it builds the Docker image and pushes it to the IBM Cloud Private Docker registry.
+
 
 ## Run
 ### Run the web application locally
@@ -82,7 +91,7 @@ Point your web browser to the url: [http://localhost:3001](http://localhost:3001
 The demonstration script is described in this [note](docs/flow/README.md)
 
 ### Run web app on IBM Cloud Private
-The application can be deployed with `helm install`. Once the docker image is build you need to remote connect to the master node where the docker private repository resides, and push the image to the repo:
+The application can be deployed with `helm install`. Once the docker image is built, you need to remote connect to the master node where the docker private repository resides, and push the image to the repo:
 ```
 $ docker build -t ibmcase/greenapp .
 $ docker tag ibmcase/greenapp  greencluster.icp:8500/greencompute/greenapp:v0.0.1
@@ -119,10 +128,18 @@ data:
           "xibmclientid": "{{ .Values.config.customerAPI.xibmclientid }}"
     },
     "toneAnalyzer":{
-          "url": "{{ .Values.config.toneAnalyzer.url }}" ,
+          "url": "{{ .Values.config.toneAnalyzer.url }}",
+          "versionDate": "{{ .Values.config.toneAnalyzer.versionDate }}",
           "username": "{{ .Values.config.toneAnalyzer.username }}",
           "password": "{{ .Values.config.toneAnalyzer.password }}"
     },
+    "scoringService":{
+        "type": "{{ .Values.config.scoringService.type }}",
+        "baseUrl": "{{ .Values.config.scoringService.baseUrl }}",
+        "instance": "{{ .Values.config.scoringService.instance }}",
+        "username": "{{ .Values.config.scoringService.username }}",
+        "password": "{{ .Values.config.scoringService.password }}"
+      },
     "dbCredentials" : {
         "url": "{{ .Values.config.dbCredentials.url }}"
     },
@@ -180,6 +197,7 @@ Assess deployment is successful:
 $ kubectl logs <pod name> --namespace greencompute
 ```
 
+Once deployed and started the Web application can be seen at the URL: http://greenapp.green.case
 
 ### Run the Jupyter notebook
 The main root project for green compute includes a dockerfile to get all the interesting components you may want to run to execute and develop Jupyter notebooks on your own. If you use `docker build -t pysparktf .`, you should get the image with python, sklearn, all spark python modules and even Tensorflow.
