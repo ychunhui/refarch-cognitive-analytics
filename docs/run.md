@@ -56,8 +56,17 @@ stage('build') {
 When compiling the angular typescripts the javascript code generated is saved under `dist` folder. It will be packaged when a docker image is built.
 
 We have added a build.sh shell script which uses a version number (0.0.6) to build the docker image with good tagging and modify the helm chart with the good tag reference.
+
 ### Jenkins pipeline
-We deployed a Jenkins server on IBM Cloud Private following the instructions [here](https://github.com/ibm-cloud-architecture/refarch-integration/tree/master/docs/devops#jenkins-on-icp).
+We deployed a Jenkins server on IBM Cloud Private following the instructions described [here](https://github.com/ibm-cloud-architecture/refarch-integration/tree/master/docs/devops#jenkins-on-icp), with a PVC named `jenkins-home` under the greencompute namespace and the commands:
+```
+$ helm install --name greenjenkins --set Persistence.ExistingClaim=jenkins-home --set Master.ImageTag=2.67 stable/jenkins --namespace greencompute
+$ cd chart/jenkins
+$ k create -f docker-reg-configMap.yaml --namespace greencompute
+$ k create -f registry-secret.yaml --namespace greencompute
+```
+Then we added configMap and secret in kubernetes cluster to keep docker private registry information so that build job can publish docker images to the registry automatically.
+
 The webapp and customer service projects have jenkinsfile that can be used in a Jenkins Pipeline. Pipelines are made up of multiple steps that allow you to build, test and deploy applications.
 
 ![](green-web-pipeline.png)
