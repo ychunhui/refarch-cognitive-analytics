@@ -62,8 +62,8 @@ We deployed a Jenkins server on IBM Cloud Private following the instructions des
 ```
 $ helm install --name greenjenkins --set Persistence.ExistingClaim=jenkins-home --set Master.ImageTag=2.67 stable/jenkins --namespace greencompute
 $ cd chart/jenkins
-$ k create -f docker-reg-configMap.yaml --namespace greencompute
-$ k create -f registry-secret.yaml --namespace greencompute
+$ kubectl create -f docker-reg-configMap.yaml --namespace greencompute
+$ kubectl create -f registry-secret.yaml --namespace greencompute
 ```
 Then we added configMap and secret in kubernetes cluster to keep docker private registry information so that build job can publish docker images to the registry automatically.
 
