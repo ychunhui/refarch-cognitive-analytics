@@ -54,8 +54,9 @@ module.exports = {
 function analyzeTone(config,req,res){
   toneAnalyzer.analyzeSentence(config,req.body.text).then(function(toneArep) {
         if (config.debug) {console.log('Tone Analyzer '+ JSON.stringify(toneArep));}
-        req.body.context["ToneAnalysisResponse"]=toneArep.utterances_tone[0].tones[0];
-        if (req.body.context["ToneAnalysisResponse"].tone_name === "Frustrated") {
+        var tone=toneArep.utterances_tone[0].tones[0];
+        if (tone !== undefined && tone.tone_name !== undefined && tone.tone_name === "Frustrated") {
+          req.body.context["ToneAnalysisResponse"]=tone;
           churnScoring.scoreCustomer(config,req,function(score){
                     req.body.context["ChurnScore"]=score;
                     sendToWCSAndBackToUser(config,req,res);
