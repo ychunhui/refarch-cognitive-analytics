@@ -15,6 +15,7 @@
  * Jerome Boyer IBM boyerje@us.ibm.com
  */
 const request = require('request').defaults({strictSSL: false});
+const CommandsFactory = require('hystrixjs').commandFactory;
 
 
 var buildOptions=function(met,aPath,config){
@@ -34,45 +35,36 @@ var buildOptions=function(met,aPath,config){
   }
 }
 
-
-var processRequest = function(res,opts) {
-  console.log(`processing request to url [${opts.method}]:`, JSON.stringify(opts))
-  request(opts,
-      function (error, response, body) {
-        if (error) {
-          console.error("Process Request Error: "+error);
-          return res.status(500).send({error:error});
-        }
-        res.send(body);
-      }
-     );
+// what run in the command pattern. Must returns a Promise
+var run = function(config,email){
+  return new Promise(function(resolve, reject){
+      var opts = buildOptions('GET','/customers/email/'+email,config);
+      opts.headers['Content-Type']='multipart/form-data';
+      request(opts,function (error, response, body) {
+        if (error) {reject(error)}
+        resolve(body);
+      });
+  });
 }
+
+// times out calls that take longer, than the configured threshold.
+var serviceCommand =CommandsFactory.getOrCreate("getCustomerDetail")
+  .run(run)
+  .timeout(5000)
+  .requestVolumeRejectionThreshold(2)
+  .build();
 
 
 module.exports = {
-  getCustomer : function(config,req,res){
-    var opts = buildOptions('GET','/customers/'+req.params.id,config);
-    opts.headers['Content-Type']='multipart/form-data';
-    processRequest(res,opts);
-  },
   getCustomerByEmail : function(config,email,res){
-    var opts = buildOptions('GET','/customers/email/'+email,config);
-    opts.headers['Content-Type']='multipart/form-data';
-    processRequest(res,opts);
+    serviceCommand.execute(config,email).then(function(response){
+      res.send(response);
+    }).catch(function(errorMsg){
+      console.error("in catch "+errorMsg);
+      res.status(500).send({error:errorMsg.Error});
+    });
   },
   getCustomerDetail : function(config,email) {
-      return new Promise(function(resolve, reject){
-          var opts = buildOptions('GET','/customers/email/'+email,config);
-          opts.headers['Content-Type']='multipart/form-data';
-          request(opts,function (error, response, body) {
-            if (error) {reject(error)}
-            resolve(body);
-          });
-      });
-  },
-  newCustomer : function(config,req,res){
-    var opts = buildOptions('POST','/customers',config);
-    opts.body=      JSON.stringify(req.body.customer);
-    processRequest(res,opts);
+      return serviceCommand.execute(config,email);
   }
 } // export

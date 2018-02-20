@@ -43,7 +43,7 @@ module.exports = function(passport,config) {
       },
       function(req, username, password, done) {
         var user = { username:username,password:password,email:username}
-        if ("tester" === username || "bobbuilder@email.com" === username || "eddie@email.com") {
+        if ("tester" === username || "bobbuilder@email.com" === username || "eddie@email.com" === username || "jane@email.com" === username ) {
           done(null,user)
         } else {
             done("Userid unknown", null);

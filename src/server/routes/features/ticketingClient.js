@@ -20,7 +20,7 @@
 
 // mockup of the ticket data source
 var tickets = {}
-tickets["eddie@email.com"]={"status":"Rejected","reason":"The current selected offering does not qualify for the second phone rebate"};
+tickets["eddie@email.com"]={"status":"Rejected","reason":"Your current selected offering does not qualify for the second free phone "};
 
 
 module.exports=  {

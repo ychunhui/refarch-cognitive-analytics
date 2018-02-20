@@ -12,6 +12,7 @@ export class AccountComponent implements OnInit {
 
   user: User;
   customer: Customer;
+  error: String;
 
   constructor(customerService : CustomersService) {
     this.user = JSON.parse(sessionStorage.getItem('currentUser'));
@@ -22,6 +23,7 @@ export class AccountComponent implements OnInit {
           },
           error => {
             console.log(error);
+            this.error="An error occurs on backend, try again later.";
           });
     }
 

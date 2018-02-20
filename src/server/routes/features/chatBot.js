@@ -19,57 +19,65 @@ const watson = require('watson-developer-cloud');
 var persist = require('./persist')
 var ticketing = require('./ticketingClient')
 var toneAnalyzer = require('./toneAnalyzerClient')
-var churnScoring = require('./churnServiceClient')
+var churnScoring = require('./WMLChurnServiceClient')
 
 /**
-Function to support the logic of integrating all the services.
+Function to support the logic of integrating all the services and interact with Watson Conversation.
 */
 module.exports = {
-  itSupport : function(config,req,res){
+  chat : function(config,req,res){
     req.body.context.predefinedResponses="";
     console.log("text "+req.body.text+".")
     if (req.body.context.toneAnalyzer && req.body.text !== "" ) {
-        toneAnalyzer.analyzeSentence(config,req.body.text).then(function(toneArep) {
-              if (config.debug) {console.log('Tone Analyzer '+ JSON.stringify(toneArep));}
-              req.body.context["ToneAnalysisResponse"]=toneArep.utterances_tone[0].tones[0];
-              if (req.body.context["ToneAnalysisResponse"].tone_name === "Frustrated") {
-                churnScoring.scoreCustomer(config,req,function(score){
-                          req.body.context["ChurnScore"]=score;
-                          sendToWCSAndBackToUser(config,req,res);
-                    })
-              }
-        }).catch(function(error){
-              console.log(error);
-          if (error.Error !== undefined) {
-            res.status(500).send({'text':error.Error});
-          }});
+        analyzeTone(config,req,res)
     }
     if (req.body.context.action === "search" && req.body.context.item ==="UserRequests") {
-      ticketing.getUserTicket(config,req.body.user.email,function(ticket){
-          if (config.debug) {
-              console.log('Ticket response: ' + JSON.stringify(ticket));
-          }
-          req.body.context["Ticket"]=ticket
-          sendToWCSAndBackToUser(config,req,res);
-      })
+        getSupportTicket(config,req,res);
     }
     if (req.body.context.action === "recommend") {
-      // TODO call ODM Here
+        // TODO call ODM Here
         sendToWCSAndBackToUser(config,req,res);
     }
     if (req.body.context.action === "transfer") {
-      console.log("Transfer to "+ req.body.context.item)
+        console.log("Transfer to "+ req.body.context.item)
     }
 
     if (req.body.context.action === undefined) {
         sendToWCSAndBackToUser(config,req,res);
     }
-  } // itSupport
+  } // chat
 };
 
 // ------------------------------------------------------------
 // Private
 // ------------------------------------------------------------
+function analyzeTone(config,req,res){
+  toneAnalyzer.analyzeSentence(config,req.body.text).then(function(toneArep) {
+        if (config.debug) {console.log('Tone Analyzer '+ JSON.stringify(toneArep));}
+        var tone=toneArep.utterances_tone[0].tones[0];
+        if (tone !== undefined && tone.tone_name !== undefined && tone.tone_name === "Frustrated") {
+          req.body.context["ToneAnalysisResponse"]=tone;
+          churnScoring.scoreCustomer(config,req,function(score){
+                    req.body.context["ChurnScore"]=score;
+                    sendToWCSAndBackToUser(config,req,res);
+              })
+        }
+  }).catch(function(error){
+      console.error(error);
+      res.status(500).send({'msg':error.Error});
+    });
+} // analyzeTone
+
+function getSupportTicket(config,req,res){
+  ticketing.getUserTicket(config,req.body.user.email,function(ticket){
+      if (config.debug) {
+          console.log('Ticket response: ' + JSON.stringify(ticket));
+      }
+      req.body.context["Ticket"]=ticket
+      sendToWCSAndBackToUser(config,req,res);
+  })
+} // getSupportTicket
+
 function sendToWCSAndBackToUser(config, req, res){
   sendMessage(config,req.body,config.conversation.workspace,res).then(function(response) {
     if (config.debug) {console.log("\n <<< From WCS "+JSON.stringify(response,null,2));}
@@ -80,11 +88,9 @@ function sendToWCSAndBackToUser(config, req, res){
     }
     res.status(200).send(response);
   }).catch(function(error){
-        console.log(error);
-    if (error.Error !== undefined) {
+      console.error(error);
       res.status(500).send({'text':error.Error});
-    }
-  });
+    });
 }
 
 var sendMessage = function(config,message,wkid,res,next){
