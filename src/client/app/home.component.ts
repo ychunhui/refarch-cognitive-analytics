@@ -31,4 +31,10 @@ Main page component to display access to the different demo features.
     bill(){
       this.router.navigate(['bill']);
     }
+
+    logout(){
+      localStorage.removeItem('currentUser');
+      this.user=new User();
+      this.router.navigate(['log']);
+    }
   }

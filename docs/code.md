@@ -106,40 +106,69 @@ export class AccountComponent implements OnInit {
 ## Server code
 The application is using nodejs and expressjs standard code structure. The code is under `server` folder.
 ### Conversation back end.
-The script is in `server/route/features\conversation.js` and uses the Watson developer cloud library to connect to the remote service. This library encapsulates HTTP calls and simplify the interaction with the public service. The only thing that needs to be done for each chat bot is to add the logic to process the response, for example to get data from a backend, presents user choices in a form of buttons, or call remote service like a rule engine / decision service.
+The script is in `server/route/features\chatBot.js` and uses the Watson developer cloud library to connect to the remote service. This library encapsulates HTTP calls and simplify the interaction with the public service. The only thing that needs to be done for each chat bot is to add the logic to process the response, for example to get data from a backend, presents user choices in a form of buttons, or call remote service like a rule engine / decision service.
 
 This module exports one function to be called by the API used by the front end. This API is defined in `api.js` as:
 ```javascript
 app.post('/api/c/conversation',isLoggedIn,(req,res) => {
-  conversation.itSupport(config,req,res)
+  chatBot.chat(config,req,res)
 });
 ```
 
-The `conversation.itSupport()` method gets the message and connection parameter and uses the Watson API to transfer the call.
+The `chatBot.chat()` method gets the message and connection parameter and uses the Watson API to transfer the call.
 
 ```javascript
-conversation = watson.conversation({
-        username: config.conversation.username,
-        password: config.conversation.password,
-        version: config.conversation.version,
-        version_date: config.conversation.versionDate});
+chat : function(config,req,res){
+  req.body.context.predefinedResponses="";
+  console.log("text "+req.body.text+".")
+  if (req.body.context.toneAnalyzer && req.body.text !== "" ) {
+      analyzeTone(config,req,res)
+  }
+  if (req.body.context.action === "search" && req.body.context.item ==="UserRequests") {
+      getSupportTicket(config,req,res);
+  }
+  if (req.body.context.action === "recommend") {
+      // TODO call ODM Here
+      sendToWCSAndBackToUser(config,req,res);
+  }
+  if (req.body.context.action === "transfer") {
+      console.log("Transfer to "+ req.body.context.item)
+  }
 
-conversation.message(
-    {
-    workspace_id: wkid,
-    input: {'text': message.text},
-    context: message.context
-    },
-    function(err, response) {
-      // add logic here to process the conversation response
-    }
-  )
+  if (req.body.context.action === undefined) {
+      sendToWCSAndBackToUser(config,req,res);
+  }
+} // chat
+```
+
+
+The send message uses the Watson developer library:
+```javascript
+
+  conversation = watson.conversation({
+          username: config.conversation.username,
+          password: config.conversation.password,
+          version: config.conversation.version,
+          version_date: config.conversation.versionDate});
+
+  conversation.message(
+      {
+      workspace_id: wkid,
+      input: {'text': message.text},
+      context: message.context
+      },
+      function(err, response) {
+        // add logic here to process the conversation response
+      }
+    )
 ```
 It uses content of the conversation context to drive some of the routing mechanism. This code supports the following sequencing:
 
 ![](seq-diagram.png)
+
 * As the user is enquiring about an existing ticket support, the conversation set the action variable to "search", and return a message in "A" that the system is searching for existing records. The web interface send back an empty message on behave of the user so the flow can continue.
-* if the conversation context has a variable action set to "search", it calls the corresponding backend to get other data. Like a ticket management app. We did not implement the ticket management app, but just a mockup.
+
+* If the conversation context has a variable action set to "search", it calls the corresponding backend to get other data. Like a ticket management app. We did not implement the ticket management app, but just a mockup.
 ```javascript
 if (req.body.context.action === "search" && req.body.context.item ==="UserRequests") {
   ticketing.getUserTicket(config,req.body.user.email,function(ticket){
@@ -152,48 +181,74 @@ if (req.body.context.action === "search" && req.body.context.item ==="UserReques
 ```
 The ticket information is returned to the conversation directly and the message response is built there.
 * if the action is "recommend", the code can call a decision service deployed on IBM Cloud and execute business rules to compute the best recommendations/ actions. See example of such approach in [the project "ODM and Watson conversation"](https://github.com/ibm-cloud-architecture/refarch-cognitive-prod-recommendations)
-* if in the conversation context the boolean `toneAnalyzer` is set to true, then any new sentence sent by the end user will be sent to Watson Tone Analyzer.
+* If in the conversation context the boolean `toneAnalyzer` is set to true, then any new sentence sent by the end user will be sent to Watson Tone Analyzer.
 ```javascript
 if (req.body.context.toneAnalyzer && req.body.text !== "" ) {
-    toneAnalyzer.analyzeSentence(config,req.body.text).then(function(toneArep) {
-      // ...
-    })
+    analyzeTone(config,req,res)
 }
 ```
-* When the result to the tone analyzer returns a tone as Sad or Frustrated then a call to a churn scoring service is performed.
+* When the result to the tone analyzer returns a tone as `Sad or Frustrated` then a call to a churn scoring service is performed.
 ```javascript
-if (req.body.context["ToneAnalysisResponse"].tone_name === "Frustrated") {
-  churnScoring.scoreCustomer(config,req,res,function(score){
-      req.body.context["ChurnScore"]=score;
-  })
-}
-sendToWCSAndBackToUser(config,req,res);
+function analyzeTone(config,req,res){
+  toneAnalyzer.analyzeSentence(config,req.body.text).then(function(toneArep) {
+        if (config.debug) {console.log('Tone Analyzer '+ JSON.stringify(toneArep));}
+        req.body.context["ToneAnalysisResponse"]=toneArep.utterances_tone[0].tones[0];
+        if (req.body.context["ToneAnalysisResponse"].tone_name === "Frustrated") {
+          churnScoring.scoreCustomer(config,req,function(score){
+                    req.body.context["ChurnScore"]=score;
+                    sendToWCSAndBackToUser(config,req,res);
+              })
+        }
+  }).catch(function(error){
+      console.error(error);
+      res.status(500).send({'msg':error.Error});
+    });
+} // analyzeTone
 ```
+
 * when the churn score is greater than a value the call is routed to a human. This is done in the conversation dialog and the context action is set to Transfer
 ```javascript
 if (req.body.context.action === "transfer") {
   console.log("Transfer to "+ req.body.context.item)
 }
 ```
-See also how the IBM Watson conversation is built to support this logic, in [this note.](wcs-support.md)
+See also how the IBM Watson conversation is built to support this logic, in [this note.](wcs/README.md)
 
 Finally this code can persist the conversation to a remote document oriented database. The code is in `persist.js` and a complete detailed explanation to setup this service is in [this note.](persist/chattranscripts.md)
 
 ### Customer back end
-The customer API is defined in the server/routes/feature folder and uses request library to perform the call to the customer micro service API. The `config.json` file specifies the end point URL.
+The customer API is defined in the server/routes/feature folder and uses the request and hystrix libraries to perform the call to the customer micro service API. The `config.json` file specifies the end point URL.
+
+The Hystrixjs is interesting to use to protect the remote call with timeout, circuit breaker, fails quickly.... modern pattern to support resiliency and fault tolerance.
 
 ```javascript
-getCustomerByEmail : function(config,req,res){
-  var opts = buildOptions('GET','/customers/email/'+req.params.email,config);
-  opts.headers['Content-Type']='multipart/form-data';
-  processRequest(res,opts);
+var run = function(config,email){
+  return new Promise(function(resolve, reject){
+      var opts = buildOptions('GET','/customers/email/'+email,config);
+      opts.headers['Content-Type']='multipart/form-data';
+      request(opts,function (error, response, body) {
+        if (error) {reject(error)}
+        resolve(body);
+      });
+  });
+}
+
+// times out calls that take longer, than the configured threshold.
+var serviceCommand =CommandsFactory.getOrCreate("getCustomerDetail")
+  .run(run)
+  .timeout(5000)
+  .requestVolumeRejectionThreshold(2)
+  .build();
+
+getCustomerDetail : function(config,email) {
+    return serviceCommand.execute(config,email);
 }
 
 ```
 
 ### Churn risk Scoring
 The scoring is done by deploying a trained model as a service. We have two clients, one for Watson Data Platform and one for Spark cluster on ICP.
-The interface is the same so it is easy to change implementation. 
+The interface is the same so it is easy to change implementation.
 
 ### ICP deployment
 For this web application we are following the same steps introduced within the [Brown Case Web app application](https://github.com/ibm-cloud-architecture/refarch-caseinc-app/blob/master/docs/icp/README.md) and can be summarized as:
@@ -242,7 +297,7 @@ kubectl config use-context greencluster.icp-context
 ```
 * Install the Helm release with the greencompute namespace: `helm install green-customerapp --name green-customerapp --namespace greencompute`
 
-![](greeapp-deployed.png)
+![](greenapp-deployed.png)
 
 * Be sure you have name resolution from the hostname you set in values.yaml and IP address of the ICP proxy. Use your local '/etc/hosts' file for that. In production, set your local DNS with this name resolution.
 
@@ -251,3 +306,8 @@ kubectl config use-context greencluster.icp-context
 
 ## Customer Microservice
 The back end customer management function is a micro service in its separate repository, and the code implementation explanation can be read [here.](https://github.com/ibm-cloud-architecture/refarch-integration-services#code-explanation)
+
+# More readings
+* [Angular io](https://angular.io/)
+* [Hystrixjs the latency an fault tolerance library](https://www.npmjs.com/package/hystrixjs)
+* Javascript Promise chaining [article](https://javascript.info/promise-chaining)

@@ -23,7 +23,6 @@ export class CustomersComponent implements OnInit {
 
   // Uses in init to load data and not the constructor.
   ngOnInit(): void {
-    this.getCustomers();
   }
 
   getCustomers(): void {

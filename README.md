@@ -2,7 +2,7 @@
 The goal of this implementation is to deliver a reference implementation for data management and service integration to consume structured and unstructured data to assess customer attrition.
 Modern applications are leveraging a set of capabilities to do a better assessment of customer characteristics and deliver best actions or recommendations. The technologies involved, include artificial intelligence, data governance, ingestion, enrichment, storage, analysis, machine learning, unstructured data classifications, natural language understanding, tone analysis, and hybrid integration....
 
-Update 02/09/18 (happy birthday Mamee): The solution is not a lab or complete end to end tutorial...yet...
+Update 02/19/18: The solution is not a lab or complete end to end tutorial...yet...
 
 ## Target audience
 * IT Architects who want to understand the components involved and the architecture constraints and design considerations
@@ -60,27 +60,30 @@ The customer churn service helped Eddie to remain as a customer for the Green Te
 ### System Context diagram
 The following diagram illustrates the system context of the application, including analytics model preparation and run time execution.
 
-![](docs/syst-ctx-0.png)
+![](docs/syst-ctx-2.png)
 
 This repository presents best practices to deploy such solution on public and private cloud, implements the webapp deployable in public or private cloud, and deliver example of data sets.
 
 ## Components
 From above figure left to right the components involved are:
-1. **Web application** to offer a set of services for the end user to use: from this user interface the end user, customer of Green Telco, can access his account, pays his bill and uses the chat bot user interface to get support help. [This note](docs/code.md) presents the implementation details and how to deploy it on ICP.
-1. The current chat application is not using any automated bot, but it is a messaging application with human as actors. There is no implementation for this component.
-1. The conversation transcripts are persisted in a document oriented database. We discuss about its implementation with Cloudant in [this technical note.](docs/persist/chattranscripts.md)
-1. The chat bot is implemented with **Watson Conversation**. The workspace is delivered for you to upload to a Watson cloud service you may have created, [this note](docs/wcs/README.md) go into the implementation detail and deployment.
-1. A **scoring service** to assess current risk of churn for the customer interacting with Green Telco services. This is a runtime analytics service using customer data and results from the Tone Analysis. [This note](docs/scoring-serv.md) goes over the detail of the deployment and implementation of this machine learning based service.
-1. The conversation sentence can be analyzed for **tone analysis**, and natural language understanding, those data are used by the scoring service. The service creation in IBM Cloud and the integration into the application flow is explained in [this note](./docs/w-tone-analyzer.md)
+1. **Web application** to offer a set of services for the end user to access: from this user interface the end user, customer of Green Telco, can access his account, pays his bill (not implemented) and uses the chat bot user interface to get support help. [This note](docs/code.md) presents the implementation details and how to deploy it on ICP.
+1. The account informations are loaded from the back end systems (7) via a customer management micro service (8) and an API product defined (9) in API Connect. The call in (2) is RESTful API and documented in [this note](docs/code.md#account-component)
+1. The chat bot is implemented with **Watson Conversation**. The workspace is delivered for you to upload to your own Watson conversation cloud service you may have created, [this note](docs/wcs/README.md) go into the implementation detail.
+1. The conversation sentences may be analyzed for **tone analysis**, and natural language understanding, those data are used by the scoring service. The service creation in IBM Cloud and the integration into the application flow is explained in [this note](./docs/w-tone-analyzer.md)
+1. The conversation transcripts are persisted in a document oriented database. We discuss about its implementation with Cloudant service on IBM Cloud in [this technical note.](docs/persist/chattranscripts.md)
+1. A **scoring service** to assess current risk of churn for the customer interacting with Green Telco services. This is a runtime analytics service using customer data and results from the Tone Analysis. [This note](docs/scoring-serv.md) goes over the detail of the deployment and implementation of this machine learning based service. It can be deployed on IBM Cloud public Watson Machine learning or IBM Cloud Private.
 1. The customer [data](https://github.com/ibm-cloud-architecture/refarch-integration-services#data-model) are persisted in on-premise server with relational database. We are using DB2 on-premise server for that. To read how the database was created see [the note in this repository](https://github.com/ibm-cloud-architecture/refarch-integration-services/blob/master/docs/DB2Creation.md)
 1. Customer data are exposed via a **micro service** approach. The implementation is done in a separate repository: [the Customer management micro-services](https://github.com/ibm-cloud-architecture/refarch-integration-services). It supports the JAXRS implementation deployed in Liberty as Docker image and the DB2 schema for DB2 data base.
-1. **API product** can be defined on top of the customer management service to monitor API usage and perform API governance. The implementation is supported by IBM API Connect. Some explanation of the product development in [this note](./docs/apim/README.md)
+1. **API product** can be defined on top of the customer management service to monitor API usage and perform API governance. The implementation is supported by IBM API Connect. Some explanation of the product development in [this note](./docs/apim/README.md)   
+At this stage the other components are more used at design time with the involvment of knowledge engineers, data analysts and data scientists.
 1. Data scientists use machine learning library and Jupiter notebook, R Studio or Zeppelin on top of Apache Spark in IBM Data Science Experience (DSX) to discover the model. We are documenting two different approaches:
-  * One based on Watson Data Platform running on IBM Cloud and described in [This note](./docs/ml/README.md) with [a jupyter notebook](./docs/ml/CustomerChurnAnalysisCI-bpull.md).
-  * One based on [Private cloud using DSX and Db2 warehouse](docs/ml/icp-dsx-ml-model.md).
+   * One based on Watson Data Platform running on IBM Cloud and described in [This note](./docs/ml/README.md) with [a jupyter notebook](./docs/ml/CustomerChurnAnalysisCI-bpull.md).
+   * One based on [Private cloud using DSX and Db2 warehouse](docs/ml/icp-dsx-ml-model.md) and [another notebook].
 1. The data used by data scientists are persisted in Db2 warehouse. [This note](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/db2warehouse) goes over the creation of the Db2 warehouse release within IBM Cloud private.
 1. **Ingestion** mechanism can move data, for chat transcripts and customer records to the DB2 warehouse. This process can run on demand when Data Scientists need new data to tune the model. It can be implemented with an ETL, with Java program, or using the Db2 Federation capability. [This note](docs/data/README.md) explains what was done to move DB2 customer data to Db2 warehouse.
+1. The natural language understanding service is added to support most advanced language processing from the text entered but the end user: entity extraction, relationships, taxonomy, etc. Those elements could be used for scoring services. The language understanding can be fine tuned by using terms and model defined in **Watson Knowledge Studio**.
 
+The following [sequence diagram](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics/blob/master/docs/seq-diagram.png) explains how the components interact together.
 ### Demonstration Script
 As an executable solution, we are presenting the demonstration script in a [separate note.](docs/flow/README.md). You need to have a running environment or being able to access our IBM internal environment for that.
 
@@ -112,35 +115,38 @@ From a pure software engineering implementation, we adopt agile, iterative imple
 TO BE COMPLETED.
 
 ## Deployment
-There are multiple possible configurations for the deployment, depending of the use of public and private cloud and the legacy system involved. For the back end we have  two options: Z OS with DB2 and Z Connect, and Java based REST micro service and DB2. For the machine learning DSX on ICP with Spark cluster for model execution or Watson Data Platform on IBM Cloud with Watson ML on IBM Cloud for the scoring service.
+There are multiple possible configurations for the deployment, depending of the use of public and private cloud and the legacy system involved. For the back end we have two options: Z OS with DB2 and Z Connect, and Java based REST micro service and DB2.
+
+For the machine learning, two options too, 1- DSX on ICP with Spark cluster for model execution or 2- Watson Data Platform on IBM Cloud with Watson ML on IBM Cloud for the scoring service.
 
 ### Using data service as a Java micro service:
-The first configuration deploys the customer manager micro service on ICP, accessing customer and account tables in DB2 servers out side of ICP, with API Connect to manage customer API product. The Web application is deployed on ICP, as well as the scoring service.
+The first configuration deploys the `customer manager` micro service on IBM Cloud Private, accessing customer and account tables deployed on DB2 servers out side of ICP. API Connect is used to manage customer API product. The Web application, the customer service, and the churn risk scoring are deployed on ICP.
 
 ![](docs/deployment-cfg1.png)
 
-* As machine learning discovery tasks running on Spark cluster are development activities and consume a lot of resources we separated the DSX, Db2 warehouse and Spark cluster in its separate ICP instance
+* As machine learning discovery tasks running on Spark cluster are development activities and consume a lot of resources we propose to separate the DSX, Db2 warehouse and Spark cluster in its separate ICP instance. The decision to use separate cluster is really linked to the size of the dataset to process, and the execution frequency: with dedicated team of Data Scientist, with terrabyte of data.
 * The runtime for cloud native applications and micro services is an ICP with HA and DR support.
 * The scoring service is deployed on a Spark Cluster running on ICP runtime cluster.
-* The DB2 instance runs on separate servers, to illustrate the use case of keeping existing infrastructure investments.
+* The DB2 instance runs on separate on-premise servers, to illustrate the use case of keeping existing infrastructure investments.
 * Watson Cognitive services are on IBM Cloud, public offering,
+* The datasource to persist the conversation data is Cloudant DB on Public Cloud.
 
-### The run time clustering
+### The ICP run time clustering
 The cluster topology with some of the major ICP and solution components will look like the following diagram:
 
 ![](docs/icp-compo.png)
 
-The dashed lines highlight the deployment concept of k8s. The Db2 warehouse is using external Glusterfs cluster for persisting data via the persistent volumes and persistent volume claim.
+The dashed lines highlight the deployment concept of k8s. The Db2 warehouse is using external `Glusterfs` cluster for persisting data via the persistent volumes and persistent volume claim.
 
 The spark cluster, master, spawner... are deployments inside ICP and installed via DSX Local.  
 ![](docs/icp-dsx-spark.png)
 
 ### Using Watson Data Platform
-As an alternate to use DSX on ICP to develop the machine learning model, Data Scientist can use Watson Data platform to gather the data, persist in public object store and deploy the model once trained to Watson Machine learning.
+As an alternate to use DSX on ICP to develop the machine learning model, Data Scientist can use Watson Data platform to gather the data from multiple datasources like Amazon S3, CloudantDB, and from transactional data, persist in public object store and deploy the model once trained to Watson Machine learning.
 
 ![](docs/deployment-cfg3.png)
 
-See [this note](docs/ml/README.md) for detail about the implementation of the model.
+See [this note](docs/ml/README.md) for detail about the implementation of the analytic model, and the see the `WMLChurnServiceClient.js` code for the integration part.
 
 ### Using Data Service as Z Connect service
 For Z OS deployment the solution looks like the diagram below, where the data service and DB2 are running on Z OS.
@@ -151,7 +157,9 @@ For Z OS deployment the solution looks like the diagram below, where the data se
 
 # Further readings
 * [Data Analysis using Spark on zOS and Jupyter Notebooks](https://github.com/IBM/Spark-on-zOS)
-*
+* [Data Science eXperience](https://datascience.ibm.com/)
+* [Other detailed ICP deployment for WebApp](https://github.com/ibm-cloud-architecture/refarch-caseinc-app/blob/master/docs/icp/README.md)
+* [DSX deployment on ICP](https://github.com/ibm-cloud-architecture/refarch-analytics/blob/master/docs/ICP/README.md)
 
 # Contribute
 We welcome your contribution. There are multiple ways to contribute: report bugs and improvement suggestion, improve documentation and contribute code.
