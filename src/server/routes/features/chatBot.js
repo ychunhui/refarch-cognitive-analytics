@@ -23,6 +23,7 @@ var churnScoring = require('./WMLChurnServiceClient')
 
 /**
 Function to support the logic of integrating all the services and interact with Watson Conversation.
+When the conversation context includes toneAnalyzis, call the service
 */
 module.exports = {
   chat : function(config,req,res){
@@ -51,16 +52,23 @@ module.exports = {
 // ------------------------------------------------------------
 // Private
 // ------------------------------------------------------------
+/*
+Call tone analyzis and when the tone assessment is frustrated call scoring services
+Call WCS back
+**/
 function analyzeTone(config,req,res){
   toneAnalyzer.analyzeSentence(config,req.body.text).then(function(toneArep) {
         if (config.debug) {console.log('Tone Analyzer '+ JSON.stringify(toneArep));}
         var tone=toneArep.utterances_tone[0].tones[0];
-        if (tone !== undefined && tone.tone_name !== undefined && tone.tone_name === "Frustrated") {
+        if (tone !== undefined && tone.tone_name !== undefined) {
           req.body.context["ToneAnalysisResponse"]=tone;
-          churnScoring.scoreCustomer(config,req,function(score){
-                    req.body.context["ChurnScore"]=score;
-                    sendToWCSAndBackToUser(config,req,res);
-              })
+          if (tone.tone_name === "Frustrated") {
+            churnScoring.scoreCustomer(config,req,function(score){
+                      req.body.context["ChurnScore"]=score;
+                      sendToWCSAndBackToUser(config,req,res);
+                })
+          } // frustrated
+          sendToWCSAndBackToUser(config,req,res);
         }
   }).catch(function(error){
       console.error(error);
