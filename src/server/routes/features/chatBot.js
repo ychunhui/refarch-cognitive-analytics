@@ -67,9 +67,14 @@ function analyzeTone(config,req,res){
                       req.body.context["ChurnScore"]=score;
                       sendToWCSAndBackToUser(config,req,res);
                 })
-          } // frustrated
+          } else {
+            sendToWCSAndBackToUser(config,req,res);
+          }// frustrated
+        } else {
+          req.body.context["ToneAnalysisResponse"]={}
           sendToWCSAndBackToUser(config,req,res);
         }
+
   }).catch(function(error){
       console.error(error);
       res.status(500).send({'msg':error.Error});
