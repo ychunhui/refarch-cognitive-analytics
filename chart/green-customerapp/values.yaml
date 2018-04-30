@@ -3,8 +3,8 @@
 # Declare variables to be passed into your templates.
 replicaCount: 1
 image:
-  repository: greencluster.icp:8500/greencompute/greenapp
-  tag: v0.0.4
+  repository: green2-cluster.icp:8500/greencompute/greenapp
+  tag: v0.0.4 
   pullPolicy: Always
 service:
   name: greenapppsvc
