@@ -22,8 +22,8 @@ sed -i '' -e s/$prev/$v/g server/config/config.json
 # Compile Angular
 ng build
 # Build docker
-docker build -t ibmcase/greenapp .
-docker tag ibmcase/greenapp greencluster.icp:8500/greencompute/greenapp:$v
+docker build -t ibmcase/greencompute-telco-app .
+docker tag ibmcase/greenapp greencluster.icp:8500/greencompute/greencompute-telco-app:$v
 
 docker images
 ## modify helm version

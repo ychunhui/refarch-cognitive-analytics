@@ -1,25 +1,28 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta2
 kind: Deployment
 metadata:
-  name: {{ template "fullname" . }}
-  namespace: {{ .Release.Namespace }}
+  name: {{ template "greencompute-telco-app.fullname" . }}
   labels:
-    app: {{ template "name" . }}
-    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    app: {{ template "greencompute-telco-app.name" . }}
+    chart: {{ template "greencompute-telco-app.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
 spec:
   replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ template "greencompute-telco-app.name" . }}
+      release: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: {{ template "name" . }}
+        app: {{ template "greencompute-telco-app.name" . }}
         release: {{ .Release.Name }}
     spec:
       volumes:
-      - name: config
-        configMap:
-          name:  {{ template "fullname" . }}
+        - name: config
+          configMap:
+            name:  {{ template "greencompute-telco-app.fullname" . }}
       containers:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -39,11 +42,19 @@ spec:
               path: /
               port: {{ .Values.service.internalPort }}
           resources:
-          {{ toYaml .Values.resources | indent 12 }}
-          {{- if .Values.nodeSelector }}
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
         restartPolicy: Always
         terminationGracePeriodSeconds: 30
         dnsPolicy: ClusterFirst
-        nodeSelector:
-        {{ toYaml .Values.nodeSelector | indent 8 }}
-        {{- end }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}

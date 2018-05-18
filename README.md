@@ -176,4 +176,10 @@ We really value contributions and to maximize the impact of code contributions w
 
 If you want to contribute, start by using git fork on this repository and then clone your own repository to your local workstation for development purpose. Add the up-stream repository to keep synchronized with the master.
 This project is still under active development, so you might run into [issues](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics/issues)
+
+## Contributors
+* [Amaresh Rajasekharan](https://www.linkedin.com/in/amaresh-rajasekharan/)
+* [Sandra Tucker](https://www.linkedin.com/in/sandraltucker/)
+* [Sunil Dube](https://www.linkedin.com/in/sunil-dube-b861861/)
+* [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/)
 Please [contact me](boyerje@us.ibm.com) for any questions.
