@@ -16,11 +16,11 @@
  */
 var request = require('request');
 const watson = require('watson-developer-cloud');
-var persist = require('./persist')
-var ticketing = require('./ticketingClient')
-var toneAnalyzer = require('./toneAnalyzerClient')
-var churnScoring = require('./WMLChurnServiceClient')
-
+var persist = require('./persist');
+var ticketing = require('./ticketingClient');
+var toneAnalyzer = require('./toneAnalyzerClient');
+var churnScoring = require('./WMLChurnServiceClient');
+var odmclient = require('./ODMClient');
 /**
 Function to support the logic of integrating all the services and interact with Watson Conversation.
 When the conversation context includes toneAnalyzis, call the service
@@ -36,8 +36,14 @@ module.exports = {
         getSupportTicket(config,req,res);
     }
     if (req.body.context.action === "recommend") {
-        // TODO call ODM Here
-        sendToWCSAndBackToUser(config,req,res);
+          odmclient.recommend(config,req.body.context,res, function(contextWithRecommendation){
+
+            if (config.debug) {
+              console.log('Context back to WCS with recommendation: ' + JSON.stringify(contextWithRecommendation));
+            }
+            req.body.context = contextWithRecommendation;
+            sendToWCSAndBackToUser(config,req,res);
+          })
     }
     if (req.body.context.action === "transfer") {
         console.log("Transfer to "+ req.body.context.item)

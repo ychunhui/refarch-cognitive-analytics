@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import {Component,AfterViewChecked, ElementRef, ViewChild, OnInit} from '@angular/core';
+import {Component, AfterViewChecked, ElementRef, ViewChild, OnInit} from '@angular/core';
 import { ConversationService }  from './conversation.service';
 import { Sentence } from "./Sentence";
 
@@ -28,6 +28,12 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   currentDialog : Sentence[]=[];
   context:any={"type":"base"}; // used to keep the Conversation context
   message:string;
+  customers = [  {value: 'young', viewValue: 'Student'},
+                 {value: 'retiree', viewValue: 'Retiree'},
+                 {value: 'adult', viewValue: 'Standard'},
+                 {value: 'noFiber', viewValue: 'NoFiber'}
+              ];
+  selectedProfile:string="adult";
   /**
   When creating a conversation component call Watson to get a greetings message as defined in the Dialog. This is more user friendly.
   */
@@ -57,13 +63,18 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
   queryString=""
 
   callConversationBFF(msg:string) {
-    
+    this.context.user=this.selectedProfile;
     this.convService.submitMessage(msg,this.context).subscribe(
       data => {
         this.context=data.context;
         let s:Sentence = new Sentence();
         s.direction="from-watson";
-        s.text=data.output.text[0];
+        s.text="";
+        for (var t of data.output.text) {
+            s.text+=t+"<br/>";
+        }
+        // manage options - as clickable buttons
+        s.options=data.context.predefinedResponses;
         this.currentDialog.push(s);
         // authorize the UI to see all the sentences from WCS even when there is not use input expected,
         // like for example waiting for the best recommendation computed by ODM
@@ -86,6 +97,7 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
     this.callConversationBFF(this.queryString);
     this.queryString="";
   }
+
 
   keyMessage(event){
      if(event.keyCode == 13) {

@@ -21,8 +21,6 @@ const CommandsFactory = require('hystrixjs').commandFactory;
 var buildOptions=function(met,aPath,config){
   return {
     url: config.customerAPI.url+aPath,
-  //  path:apath,
-
     method: met,
     rejectUnauthorized: true,
     //ca: caCerts,
