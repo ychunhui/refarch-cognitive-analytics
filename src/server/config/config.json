@@ -1,5 +1,5 @@
 {
-    "conversation" :{
+    "watsonassistant" :{
       "version" : "v1",
       "versionDate":"2017-05-26",
       "url": "https://gateway.watsonplatform.net/conversation/api",

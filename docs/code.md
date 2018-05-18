@@ -250,52 +250,69 @@ getCustomerDetail : function(config,email) {
 The scoring is done by deploying a trained model as a service. We have two clients, one for Watson Data Platform and one for Spark cluster on ICP.
 The interface is the same so it is easy to change implementation.
 
+### Helm chart
+We created a new helm chart for this application with
+`helm create greencompute-telco-app`.
+Then we update the following:
+* Add a configMap.yaml file under the templates to defined the parameters used to configure the service end point metadata used by the BFF code.
+* Add a volume in the deployment.yaml to use the parameters from the configMap. and mount this volume into the file. And modify the port mapping  
+```
+spec:
+  volumes:
+    - name: config
+      configMap:
+        name:  {{ template "greencompute-telco-app.fullname" . }}
+  containers:
+    - name: {{ .Chart.Name }}
+      image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+      imagePullPolicy: {{ .Values.image.pullPolicy }}
+      ports:
+        - containerPort: {{ .Values.service.internalPort }}
+      volumeMounts:
+        - name: config
+          mountPath: /greenapp/server/config/config.json
+          subPath: config.json
+```
+* In values.yaml set the docker image name
+* Modify the value to use service.port to be externalPort and set it to match the one exposed in dockerfile:
+```
+service:
+  type: ClusterIP
+  externalPort: 3001
+  internalPort: 3001
+```
+* enable ingress and set a hostname (telcoapp.green.case)
+* In the ingress use the servicePort to map the externalPort.
+```
+{{- $servicePort := .Values.service.externalPort -}}
+```
+* In the service.yaml be sure to define the ports well using the one set in values.yaml
+```
+ports:
+  - port: {{ .Values.service.externalPort }}
+    targetPort: {{ .Values.service.internalPort }}
+    protocol: TCP
+    name: {{ .Values.service.name }}
+```
+
+
 ### ICP deployment
-For this web application we are following the same steps introduced within the [Brown Case Web app application](https://github.com/ibm-cloud-architecture/refarch-caseinc-app/blob/master/docs/icp/README.md) and can be summarized as:
+For this web application we are following the same steps introduced within the [Brown Case Web app application](https://github.com/ibm-cloud-architecture/refarch-caseportal-app/blob/master/docs/icp/README.md) and can be summarized as:
 * Compile the app: `ng build`
-* Create docker images: `docker build -t ibmcase/greenapp . `
-* Tag the image with the docker repository name, version: `docker tag ibmcase/greenapp greencluster.icp:8500/greencompute/greenapp:v0.0.2`
-* Push the docker images to the docker repository running on the Master node of ICP:
+* Create docker images: `docker build -t ibmcase/greencompute-telco-app  . `
+* We are now using public dockerhub so just we are doing a `docker push ibmcase/greencompute-telco-app`
+* When deploying to a private registry as the one internal to ICP, tag the image with the docker repository name, version: `docker tag ibmcase/greencompute-telco-app  greencluster.icp:8500/greencompute/greencompute-telco-app`, then push the docker images to the docker repository running on the Master node of ICP:
 ```
 $ docker login greencluster.icp:8500
 $ docker push greencluster.icp:8500/greencompute/greenapp:v0.0.2
 ```
-* Be sure the parameter of the config object in the `values.yaml` for the kubernetes deployment use the values of the environment.
-```yaml
-config:
-  conversation:
-    version: v1
-    versionDate: 2017-05-26
-    username: 291d9
-    password: ss
-    conversationId: Complex Relocation
-    workspace: a92
-    usePersistence: false
-  customerAPI:
-    url: https://172.16.50.8:443/csplab/sb
-    host: greencustomerms-green-customerms
-    xibmclientid: <>
-  toneAnalyzer:
-    url: https://gateway.watsonplatform.net/tone-analyzer/api
-    versionDate: 2017-09-21
-    username: <>
-    password: <>
-  dbCredentials:
-    url: https://<>
-```
-In the settings above the URL for the customer API is going to the API gateway.
 
-* Change the virtual hostname if you want to. The current name is `greenapp.green.case`, and if you have existing Ingress rule that defines the same hostname, you need to take care of that.
-* Be sure to be connected to the kubernete server with commands like:
+* Be sure to be connected to the kubernetes server with commands like:
 ```
-kubectl config set-cluster greencluster.icp --server=https://172.16.40.130:8001 --insecure-skip-tls-verify=true
-kubectl config set-context greencluster.icp-context --cluster=greencluster.icp
-kubectl config set-credentials admin --token=<>
-kubectl config set-context greencluster.icp-context --user=admin --namespace=browncompute
-kubectl config use-context greencluster.icp-context
-
+bx pr login -u admin -a https://greencluster.icp:8443 --skip-ssl-validation
+bx pr cluster-config greencluster.icp
 ```
-* Install the Helm release with the greencompute namespace: `helm install green-customerapp --name green-customerapp --namespace greencompute`
+* Install the Helm release with the greencompute namespace: `helm install  greencompute-telco-app/ --name green-telco-app --namespace greencompute`
 
 ![](greenapp-deployed.png)
 

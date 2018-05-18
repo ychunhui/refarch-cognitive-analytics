@@ -7,14 +7,14 @@ metadata:
 data:
   config.json: |+
     {
-        "conversation" :{
-            "version" : "{{ .Values.config.conversation.version }}",
-            "versionDate":"{{ .Values.config.conversation.versionDate }}",
-            "username":"{{ .Values.config.conversation.username }}",
-            "password":"{{ .Values.config.conversation.password }}",
-            "conversationId":"{{ .Values.config.conversation.conversationId }}",
-            "workspace":"{{ .Values.config.conversation.workspace }}",
-            "usePersistence": "{{ .Values.config.conversation.usePersistence }}"
+        "watsonassistant" :{
+            "version" : "{{ .Values.config.watsonassistant.version }}",
+            "versionDate":"{{ .Values.config.watsonassistant.versionDate }}",
+            "username":"{{ .Values.config.watsonassistant.username }}",
+            "password":"{{ .Values.config.watsonassistant.password }}",
+            "conversationId":"{{ .Values.config.watsonassistant.conversationId }}",
+            "workspace":"{{ .Values.config.watsonassistant.workspace }}",
+            "usePersistence": "{{ .Values.config.watsonassistant.usePersistence }}"
           },
         "customerAPI":{
               "url":"{{ .Values.config.customerAPI.url }}",
@@ -34,6 +34,13 @@ data:
             "username": "{{ .Values.config.scoringService.username }}",
             "password": "{{ .Values.config.scoringService.password }}"
           },
+        "odm" : {
+          "hostname": "{{ .Values.config.odm.hostname }}",
+          "port": "{{ .Values.config.odm.port }}",
+          "protocol": "{{ .Values.config.odm.protocol }}",
+          "path": "{{ .Values.config.odm.path }}",
+          "authtoken": "{{ .Values.config.odm.authtoken }}"
+        },
         "dbCredentials" : {
             "url": "{{ .Values.config.dbCredentials.url }}"
         },

@@ -17,7 +17,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import { MatSelectModule } from '@angular/material';
+import { MatSelectModule, MatFormFieldModule } from '@angular/material';
 import { HttpModule } from '@angular/http';
 import { RouterModule, Routes } from '@angular/router';
 
@@ -64,6 +64,7 @@ const routes: Routes = [
     HttpModule,
     ReactiveFormsModule,
     MatSelectModule,
+    MatFormFieldModule,
     RouterModule.forRoot(routes)
   ],
   providers: [

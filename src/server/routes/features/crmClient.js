@@ -20,10 +20,10 @@
 
 // mockup of the customer data source
 var customers = {}
-customers["young"]={"age":18,"subscription":"ADSL"};
-customers["noFiber"] = {"age":30,"subscription":"ADSL"};
-customers["retiree"]={"age":65,"subscription":"ADSL"};
-customers["adult"]={"age":36,"subscription":"ADSL"};
+customers["young"] = {"age":18,"existingProduct":{"productCategory":"ADSL"}};
+customers["noFiber"] = {"age":30,"existingProduct":{"productCategory":"ADSL"}};
+customers["retiree"] = {"age":65,"existingProduct":{"productCategory":"ADSL"}};
+customers["adult"] = {"age":36,"existingProduct":{"productCategory":"ADSL"}};
 
 module.exports=  {
     getUserProfile: function(config,user,next){

@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 import {Component, AfterViewChecked, ElementRef, ViewChild, OnInit} from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { ConversationService }  from './conversation.service';
 import { Sentence } from "./Sentence";
 
@@ -26,14 +27,15 @@ import { Sentence } from "./Sentence";
 
 export class ConversationComponent implements OnInit, AfterViewChecked {
   currentDialog : Sentence[]=[];
+  profileControl = new FormControl('',[]);
   context:any={"type":"base"}; // used to keep the Conversation context
   message:string;
-  customers = [  {value: 'young', viewValue: 'Student'},
+  profiles = [  {value: 'young', viewValue: 'Student'},
                  {value: 'retiree', viewValue: 'Retiree'},
                  {value: 'adult', viewValue: 'Standard'},
                  {value: 'noFiber', viewValue: 'NoFiber'}
               ];
-  selectedProfile:string="adult";
+  selectedProfile:string = 'adult';
   /**
   When creating a conversation component call Watson to get a greetings message as defined in the Dialog. This is more user friendly.
   */

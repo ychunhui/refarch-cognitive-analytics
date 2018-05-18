@@ -10,7 +10,6 @@ Main page component to display access to the different demo features.
     styleUrls: ['./home.component.css'],
     templateUrl: './home.component.html'
   })
-
   export class HomeComponent {
     user: User;
 

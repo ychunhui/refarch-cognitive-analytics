@@ -70,6 +70,10 @@ module.exports=  {
 
 	// uploads the ODM input data in the POST call
   prepareODMInputData(config,wcscontext, function(data){
+    // for ODM just send the context
+    if (config.debug) {
+      console.log('Sending data: ' + data);
+    }
     req.write(data);
     req.end();
   });
@@ -89,13 +93,10 @@ module.exports=  {
 // data to take decision
 var prepareODMInputData = function(config,wcscontext,next) {
   crmClient.getUserProfile(config,wcscontext.user, function(data) {
-      wcscontext["Customer"]=data;
-      var contextJSON = JSON.stringify(wcscontext);
-      // for ODM just send the context
-      if (config.debug) {
-        console.log('Sending data: ' +contextJSON);
-      }
-      next(contextJSON);
+      c = {}
+      data['newZipCode']=wcscontext.ZipCode;
+      c['customer']=data;
+      next(JSON.stringify(c));
    }
   )
 } // prepareODMInputData
