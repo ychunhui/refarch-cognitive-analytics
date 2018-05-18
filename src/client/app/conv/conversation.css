@@ -2,9 +2,14 @@
   border-style: solid;
   max-width: 950px;
   margin: 30px auto;
+  outline: 20px;
   border-width : 2px;
   border-radius: 8px;
   border-color: #blue;
+}
+
+.outer {
+  outline: 20px;
 }
 
 .scrolling-box {

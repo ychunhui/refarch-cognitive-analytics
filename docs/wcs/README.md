@@ -1,6 +1,6 @@
-# Support Chat bot with Watson Conversation
-We recommend to follow [this tutorial](https://www.ibm.com/cloud/garage/tutorials/watson_conversation_support) to learn how to develop a Watson Conversation service and dialog flow.  
-The implemented Watson Conversation workspace is under the folder `src/wcs`, named `telco-support-wcs-wks.json` and you can import it into your own Watson conversation service:
+# Support Chat bot with Watson Assistant
+We recommend to follow [this tutorial](https://www.ibm.com/cloud/garage/tutorials/watson_conversation_support) to learn how to develop a Watson Assistant service and dialog flow.  
+The implemented Watson Assistant workspace is under the folder `src/wcs`, named `telco-support-wcs-wks.json` and you can import it into your own Watson Assistant service:
 
 ![](import-wks.png)
 
@@ -48,3 +48,4 @@ When the score is higher than `.7`, we want to like transfer to a human.
 ![](tone-analyzing-resp.png)
 
 Recall that you can unit test the conversation inside the Editor. See the tutorial on how to do so.
+Assistant

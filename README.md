@@ -14,7 +14,7 @@ Update 02/19/18: The solution is not a lab or complete end to end tutorial...yet
 * Data Scientists work hand by hand with application developers to quickly deliver solution to the business
 * Data access layer to traditional relational data should be done with a micro service approach exposing RESTful API or using modern z OS Connect application.
 * Cloud native apps, micro services, can be deployed in public or private cloud, like IBM Cloud private based on Kubernetes and containers
-* Public services like the Watson services can be easily integrated within the solution: Watson Data Platform, Data Science Experience, Tone Analyzer, Watson Conversation
+* Public services like the Watson services can be easily integrated within the solution: Watson Data Platform, Data Science Experience, Tone Analyzer, Watson Assistant
 * API management is used to present a unique API for customer data, standardize for consumers like the webapp, even if the back end is Java based or z Connected based.
 
 ## Table of contents
@@ -68,7 +68,7 @@ This repository presents best practices to deploy such solution on public and pr
 From above figure left to right the components involved are:
 1. **Web application** to offer a set of services for the end user to access: from this user interface the end user, customer of Green Telco, can access his account, pays his bill (not implemented) and uses the chat bot user interface to get support help. [This note](docs/code.md) presents the implementation details and how to deploy it on ICP.
 1. The account informations are loaded from the back end systems (7) via a customer management micro service (8) and an API product defined (9) in API Connect. The call in (2) is RESTful API and documented in [this note](docs/code.md#account-component)
-1. The chat bot is implemented with **Watson Conversation**. The workspace is delivered for you to upload to your own Watson conversation cloud service you may have created, [this note](docs/wcs/README.md) go into the implementation detail.
+1. The chat bot is implemented with **Watson Assistant**. The workspace is delivered for you to upload to your own Watson Assistant cloud service you may have created, [this note](docs/wcs/README.md) go into the implementation detail.
 1. The conversation sentences may be analyzed for **tone analysis**, and natural language understanding, those data are used by the scoring service. The service creation in IBM Cloud and the integration into the application flow is explained in [this note](./docs/w-tone-analyzer.md)
 1. The conversation transcripts are persisted in a document oriented database. We discuss about its implementation with Cloudant service on IBM Cloud in [this technical note.](docs/persist/chattranscripts.md)
 1. A **scoring service** to assess current risk of churn for the customer interacting with Green Telco services. This is a runtime analytics service using customer data and results from the Tone Analysis. [This note](docs/scoring-serv.md) goes over the detail of the deployment and implementation of this machine learning based service. It can be deployed on IBM Cloud public Watson Machine learning or IBM Cloud Private.

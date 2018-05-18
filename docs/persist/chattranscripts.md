@@ -32,7 +32,7 @@ Open the `config.json file` to add the URL of the service and enable persistence
 ATTENTION: when deploying into IBM Cloud private the configuration is defined in the deployment configuration. So you may want to tune both.
 
 ```json
-"conversation": {
+"watsonassistant": {
   "usePersistence": false
 },
 "dbCredentials" : {
@@ -41,7 +41,7 @@ ATTENTION: when deploying into IBM Cloud private the configuration is defined in
 ```
 
 ## Implement service Client
-The code is in the `server/routes/features/persist.js`. The method is using Cloudant API module, and the conversation response. The code is using the persistId and revId of cloudant response to modify the watson conversation context with those two variables so a unique document is created for all interaction, and the document is updated at each interaction.
+The code is in the `server/routes/features/persist.js`. The method is using Cloudant API module, and the conversation response. The code is using the persistId and revId of cloudant response to modify the Watson Assistant context with those two variables so a unique document is created for all interaction, and the document is updated at each interaction.
 ```javascript
 saveConversation : function(config,conv,next){
   var cloudant = require('cloudant')(config.dbCredentials.url);

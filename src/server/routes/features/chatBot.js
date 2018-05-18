@@ -98,7 +98,7 @@ function getSupportTicket(config,req,res){
 } // getSupportTicket
 
 function sendToWCSAndBackToUser(config, req, res){
-  sendMessage(config,req.body,config.conversation.workspace,res).then(function(response) {
+  sendMessage(config,req.body,config.watsonassistant.workspace,res).then(function(response) {
     if (config.debug) {console.log("\n <<< From WCS "+JSON.stringify(response,null,2));}
     response.text="<p>"+response.output.text[0]+"</p>";
     //  support multiple choices response
@@ -115,17 +115,17 @@ function sendToWCSAndBackToUser(config, req, res){
 var sendMessage = function(config,message,wkid,res,next){
   return new Promise(function(resolve, reject){
       if (message.context.conversation_id === undefined) {
-          message.context["conversation_id"]=config.conversation.conversationId;
+          message.context["conversation_id"]=config.watsonassistant.conversationId;
       }
       if (config.debug) {
-          console.log("\n--- Connect to Watson Conversation named: " + config.conversation.conversationId);
+          console.log("\n--- Connect to Watson Conversation named: " + config.watsonassistant.conversationId);
           console.log(">>> to WCS "+JSON.stringify(message,null,2));
       }
       conversation = watson.conversation({
-              username: config.conversation.username,
-              password: config.conversation.password,
-              version: config.conversation.version,
-              version_date: config.conversation.versionDate});
+              username: config.watsonassistant.username,
+              password: config.watsonassistant.password,
+              version: config.watsonassistant.version,
+              version_date: config.watsonassistant.versionDate});
 
       conversation.message(
           {
@@ -138,7 +138,7 @@ var sendMessage = function(config,message,wkid,res,next){
               console.log('error:', err);
               reject(null,{'Error': "Communication error with Watson Service. Please contact your administrator"});
             } else {
-              if (config.conversation.usePersistence) {
+              if (config.watsonassistant.usePersistence) {
                   response.context.persistId=message.context.persistId;
                   response.context.revId=message.context.revId;
                   persist.saveConversation(config,response,function(persistRep){

@@ -7,7 +7,7 @@ import { User } from './login/User';
   templateUrl: './app.component.html'
 })
 export class AppComponent {
-    version:string ="v0.0.4";
+    version:string ="v0.0.5 05-15-2018";
     user: User;
 
     constructor(private router: Router) {
