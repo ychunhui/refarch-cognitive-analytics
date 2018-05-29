@@ -18,9 +18,14 @@ import { FormControl } from '@angular/forms';
 import { ConversationService }  from './conversation.service';
 import { Sentence } from "./Sentence";
 
+
+
+
+
 @Component({
     //moduleId: module.id,
-    selector: 'conversation',
+  selector: 'conversation',
+
     styleUrls:['conversation.css'],
     templateUrl:'conversation.html'
   })
@@ -36,6 +41,8 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
                  {value: 'noFiber', viewValue: 'NoFiber'}
               ];
   selectedProfile:string = 'adult';
+  selectedValue: string;
+
   /**
   When creating a conversation component call Watson to get a greetings message as defined in the Dialog. This is more user friendly.
   */
@@ -89,6 +96,8 @@ export class ConversationComponent implements OnInit, AfterViewChecked {
         }
     )
   }
+
+
 
   submit(){
     let obj:Sentence = new Sentence();
