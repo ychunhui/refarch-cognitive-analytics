@@ -15,7 +15,7 @@
  * Jerome Boyer IBM boyerje@us.ibm.com
  */
 var request = require('request');
-const watson = require('watson-developer-cloud');
+const AssistantV1 = require('watson-developer-cloud/assistant/v1');
 var persist = require('./persist');
 var ticketing = require('./ticketingClient');
 var toneAnalyzer = require('./toneAnalyzerClient');
@@ -29,6 +29,7 @@ module.exports = {
   chat : function(config,req,res){
     req.body.context.predefinedResponses="";
     console.log("text "+req.body.text+".")
+    // logic to handle WCS response after prompting to user a message
     if (req.body.context.toneAnalyzer && req.body.text !== "" ) {
         analyzeTone(config,req,res)
     }
@@ -113,20 +114,19 @@ function sendToWCSAndBackToUser(config, req, res){
 }
 
 var sendMessage = function(config,message,wkid,res,next){
+  var conversation = new AssistantV1({
+      username: config.watsonassistant.username,
+      password: config.watsonassistant.password,
+      version: config.watsonassistant.versionDate
+    });
   return new Promise(function(resolve, reject){
       if (message.context.conversation_id === undefined) {
           message.context["conversation_id"]=config.watsonassistant.conversationId;
       }
       if (config.debug) {
-          console.log("\n--- Connect to Watson Conversation named: " + config.watsonassistant.conversationId);
-          console.log(">>> to WCS "+JSON.stringify(message,null,2));
+          console.log("\n--- Connect to Watson Assistant named: " + config.watsonassistant.conversationId);
+          console.log(">>> to Assistant "+JSON.stringify(message,null,2));
       }
-      conversation = watson.conversation({
-              username: config.watsonassistant.username,
-              password: config.watsonassistant.password,
-              version: config.watsonassistant.version,
-              version_date: config.watsonassistant.versionDate});
-
       conversation.message(
           {
           workspace_id: wkid,

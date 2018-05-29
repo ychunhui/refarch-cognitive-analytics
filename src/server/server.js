@@ -35,6 +35,7 @@ app.use(session({
 	secret: '321sessionverysecretsecret123',
 	resave: false,
   saveUninitialized: false,
+	cookie: { secure: false }, // not using https between browser and bff
 	store: new MemoryStore()
 }));
 app.use(passport.initialize());

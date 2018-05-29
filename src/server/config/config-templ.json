@@ -1,7 +1,8 @@
 {
-  "conversation" :{
+  "watsonassistant" :{
     "version" : "v1",
-    "versionDate":"2017-05-26",
+    "versionDate":"2018-02-16",
+    "url": "https://gateway.watsonplatform.net/conversation/api",
     "username":"",
     "password":"",
     "conversationId":"Complex Relocation",
@@ -9,14 +10,15 @@
     "usePersistence": false
   },
   "customerAPI":{
-      "url":"https://172.16.50.8:443/csplab/sb",
+      "url":"http://customer.green.case/caseserv/api/v1",
       "host":"customer.green.case",
       "xibmclientid": "d6ef6d26-f017-42e6-b703-1d8aecfe1834"
   },
   "toneAnalyzer":{
       "url": "https://gateway.watsonplatform.net/tone-analyzer/api",
-      "username": "3e...",
-      "password": "z..."
+      "versionDate": "2017-09-21",
+      "username": "3eda",
+      "password": "zXf"
   },
   "scoringService":{
     "type":"WML",
@@ -28,7 +30,14 @@
   "dbCredentials" : {
     "url": "https://...-bluemix:cd....@...e50-bluemix.cloudant.com"
   },
+  "odm" : {
+    "hostname": "172.16.40.41",
+    "port": 31154,
+    "protocol": "http:",
+    "path": "/DecisionService/rest/v1/ProductRecommendationRuleApp/1.0/ProductRecommendation/1.0/WADL",
+    "authtoken":"Basic cmVzQWRtaW46MWpldzFyNTc1enU1ZA=="
+  },
   "debug":true,
   "port": 3001,
-  "version": "v0.0.1"
+  "version": "v0.0.4"
 }

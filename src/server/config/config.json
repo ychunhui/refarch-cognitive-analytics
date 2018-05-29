@@ -1,7 +1,7 @@
 {
     "watsonassistant" :{
       "version" : "v1",
-      "versionDate":"2017-05-26",
+      "versionDate":"2018-02-16",
       "url": "https://gateway.watsonplatform.net/conversation/api",
       "username":"291d9397-073f-46d9-b0d2-11b54e6ae533",
       "password":"aDFBIIPYkQlD",
