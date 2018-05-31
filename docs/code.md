@@ -1,13 +1,15 @@
 # Implementation explanations
+In this chapter we are addressing the Angular 5 implementation and the Back end for Front end nodejs app used to implement authentication, service orchestration, data mapping and to serve the Angular App. The BFF is also using Hystrix JS for circuit breaker and fault tolerance.
+
 ## Web Application
 ### Code explanation
-Most of the interactions the end users are doing via the Web Browser are supported by [Angular 4 single page](http://angular.io) javascript library, with its `router` mechanism and the DOM rendering capabilities via directives and components. When there is a need to access data to the on-premise server for persistence, an AJAX call is done to server, and  the server will respond asynchronously later on. The components involved are presented in the figure below in a generic way
+Most of the interactions the end users are doing via the Web Browser are supported by [Angular 5 single page](http://angular.io) javascript library, with its `router` mechanism and the DOM rendering capabilities via directives and components. When there is a need to access data to the on-premise server for persistence, an AJAX call is done to server, and  the server will respond asynchronously later on. The components involved are presented in the figure below in a generic way
 
-![Angular 2 App](ang-node-comp.png)
+![Angular 5 App](ang-node-comp.png)
 
 From an implementation point of view we are interested by the router, the controller and the services.
 
-To clearly separate the codebase for front-end and back-end the `src/client` folder includes angular 4 code while `src/server` folder includes the REST api implemented with expressjs.
+To clearly separate the codebase for front-end and back-end the `src/client` folder includes Angular 5 code while `src/server` folder includes the REST api and BFF implemented with expressjs.
 
 ## Angular app
 The application code follows the standard best practices for Angularjs development:
@@ -16,12 +18,12 @@ The application code follows the standard best practices for Angularjs developme
 * use of component, html and css per feature page
 * encapsulate calls to back end for front end server via service components.
 
-We recommend beginners one Angular to follow the [product "tour of heroes" tutorial here.](https://angular.io/tutorial)
+We recommend Angular beginners to follow the [product "tour of heroes" tutorial](https://angular.io/tutorial). We also recommend to read our last work on Angular 5 app using a test driven development approach in [this project](https://github.com/ibm-cloud-architecture/refarch-caseportal-app).
 
 ### Main Components
-As traditional Angular 4 app, you need:
-*  a `main.ts` script to declare and boostrap your application.
-* a `app.module.ts` to declare all the components of the application and the URL routes declaration. Those routes are internal to the web browser. They are protected by a guard mechanism to avoid unlogged person to access the page. The following code declares 3 routes for the three main features of this application: display the main top navigation page, the customer page to access account, and the itSupport to access the chat bot user interface. The AuthGard assess if the user is known and logged, if not it is routed to the login page.
+As traditional Angular 5 app, you need:
+*  a `main.ts` script to declare and bootstrap your application.
+* a `app.module.ts` to declare all the components of the application and the URL routes declaration. Those routes are internal to the web browser. They are protected by a guard mechanism to avoid unlogged person to access some private pages. The following code declares three routes for the three main features of this application: display the main top navigation page, the customer page to access account, and the itSupport to access the chat bot user interface. The AuthGard assess if the user is known and logged, if not it is routed to the login page.
  ```
  const routes: Routes = [
    { path: 'home', component: HomeComponent,canActivate: [AuthGuard]},
@@ -115,7 +117,7 @@ app.post('/api/c/conversation',isLoggedIn,(req,res) => {
 });
 ```
 
-The `chatBot.chat()` method gets the message and connection parameter and uses the Watson API to transfer the call.
+The `chatBot.chat()` method gets the message and connection parameter and uses the Watson API to transfer the call. The set of if statements are used to perform actions, call services, using the variables set in the Watson Conversation Context. One example is to use the Operational Decision Management rule engine to compute the best product for a given customer situation.
 
 ```javascript
 chat : function(config,req,res){
@@ -128,8 +130,10 @@ chat : function(config,req,res){
       getSupportTicket(config,req,res);
   }
   if (req.body.context.action === "recommend") {
-      // TODO call ODM Here
-      sendToWCSAndBackToUser(config,req,res);
+      odmclient.recommend(config,req.body.context,res, function(contextWithRecommendation){
+        req.body.context = contextWithRecommendation;
+        sendToWCSAndBackToUser(config,req,res);
+      });
   }
   if (req.body.context.action === "transfer") {
       console.log("Transfer to "+ req.body.context.item)
@@ -328,3 +332,4 @@ The back end customer management function is a micro service in its separate rep
 * [Angular io](https://angular.io/)
 * [Hystrixjs the latency an fault tolerance library](https://www.npmjs.com/package/hystrixjs)
 * Javascript Promise chaining [article](https://javascript.info/promise-chaining)
+* [Case Portal app using Angular 5 app using a test driven development approach in [this project](https://github.com/ibm-cloud-architecture/refarch-caseportal-app)
