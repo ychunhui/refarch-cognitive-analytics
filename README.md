@@ -182,4 +182,4 @@ This project is still under active development, so you might run into [issues](h
 * [Sandra Tucker](https://www.linkedin.com/in/sandraltucker/)
 * [Sunil Dube](https://www.linkedin.com/in/sunil-dube-b861861/)
 * [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/)
-Please [contact me](boyerje@us.ibm.com) for any questions.
+Please [contact me](mailto:boyerje@us.ibm.com) for any questions.
