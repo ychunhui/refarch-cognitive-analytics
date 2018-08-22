@@ -85,6 +85,7 @@ At this stage the other components are more used at design time with the involve
    * One based on [Private cloud using DSX and Db2 warehouse](docs/ml/icp-dsx-ml-model.md) and [another notebook](./docs/ml/CustomerChurnAnalysisDSXICP.md).
 1. The data used by data scientists are persisted in Db2 warehouse. [This note](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/db2warehouse) goes over the creation of the Db2 warehouse release within IBM Cloud private.
 1. **Ingestion** mechanism can move data, for chat transcripts and customer records to the DB2 warehouse. This process can run on demand when Data Scientists need new data to tune the model. It can be implemented with an ETL, with Java program, or using the Db2 Federation capability. [This note](docs/data/README.md) explains what was done to move DB2 customer data to Db2 warehouse.
+1. [Product recommendations based on Operational Decision Management rules](https://github.com/ibm-cloud-architecture/refarch-cognitive-prod-recommendations)
 1. The natural language understanding service is added to support most advanced language processing from the text entered but the end user: entity extraction, relationships, taxonomy, etc. Those elements could be used for scoring services. The language understanding can be fine tuned by using terms and model defined in **Watson Knowledge Studio**.
 
 The following [sequence diagram](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics/blob/master/docs/seq-diagram.png) explains how the components interact together.
