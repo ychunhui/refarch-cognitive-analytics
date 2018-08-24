@@ -31,8 +31,8 @@
       "url": "https://01bcc074-b3a0-4b07-93c6-eade6fb3ce50-bluemix:cd68d33a28d499bc6211810a56a0b99393a699190630f7811c438149be944500@01bcc074-b3a0-4b07-93c6-eade6fb3ce50-bluemix.cloudant.com"
     },
     "odm" : {
-      "hostname": "172.16.40.41",
-      "port": 31154,
+      "hostname": "172.16.40.132",
+      "port": 32090,
       "protocol": "http:",
       "path": "/DecisionService/rest/v1/ProductRecommendationRuleApp/1.0/ProductRecommendation/1.0/WADL",
       "authtoken":"Basic cmVzQWRtaW46MWpldzFyNTc1enU1ZA=="

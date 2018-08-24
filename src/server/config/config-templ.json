@@ -31,7 +31,7 @@
     "url": "https://...-bluemix:cd....@...e50-bluemix.cloudant.com"
   },
   "odm" : {
-    "hostname": "172.16.40.41",
+    "hostname": "172.16.40.131",
     "port": 31154,
     "protocol": "http:",
     "path": "/DecisionService/rest/v1/ProductRecommendationRuleApp/1.0/ProductRecommendation/1.0/WADL",
