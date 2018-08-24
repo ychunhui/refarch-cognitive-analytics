@@ -26,6 +26,8 @@ module.exports=  {
   ODM output will be added to the Conversation context as well.
   */
   recommend : function(config,wcscontext,response,next){
+    // TODO assess if in the wcscontext there is the user profile with the products he owns if not
+    // call the customer microservice and inject it. To do so we need to modify the xom see zen #466 
     // Config for the POST to the ODM Rule Execution Server
     var options = {
       protocol: config.odm.protocol,

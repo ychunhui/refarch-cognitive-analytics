@@ -21,6 +21,7 @@
 // mockup of the customer data source
 var customers = {}
 customers["young"] = {"age":18,"existingProduct":{"productCategory":"ADSL"}};
+customers["student"] = {"age":18,"existingProduct":{"productCategory":"ADSL"}};
 customers["noFiber"] = {"age":30,"existingProduct":{"productCategory":"ADSL"}};
 customers["retiree"] = {"age":65,"existingProduct":{"productCategory":"ADSL"}};
 customers["adult"] = {"age":36,"existingProduct":{"productCategory":"ADSL"}};

@@ -1,9 +1,11 @@
 # Implementation explanations
-In this chapter we are addressing the Angular 5 implementation and the Back end for Front end nodejs app used to implement authentication, service orchestration, data mapping and to serve the Angular App. The BFF is also using Hystrix JS for circuit breaker and fault tolerance.
+In this chapter we are addressing the Angular 5 implementation and the Backend For Frontend as a nodejs app used to implement authentication, service orchestration, data mapping and to serve the Angular App. The BFF is also using Hystrix JS for circuit breaker and fault tolerance.
+
+Update 08/2108 - Author [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/)
 
 ## Web Application
 ### Code explanation
-Most of the interactions the end users are doing via the Web Browser are supported by [Angular 5 single page](http://angular.io) javascript library, with its `router` mechanism and the DOM rendering capabilities via directives and components. When there is a need to access data to the on-premise server for persistence, an AJAX call is done to server, and  the server will respond asynchronously later on. The components involved are presented in the figure below in a generic way
+Most of the end user's interactions are supported by [Angular 5 single page](http://angular.io) javascript library, with its `router` mechanism and the DOM rendering capabilities via directives and components. When there is a need to access data to the on-premise server for persistence, an AJAX call is done to server, and  the server will respond asynchronously later on. The components involved are presented in the figure below in a generic way:
 
 ![Angular 5 App](ang-node-comp.png)
 
@@ -23,7 +25,7 @@ We recommend Angular beginners to follow the [product "tour of heroes" tutorial]
 ### Main Components
 As traditional Angular 5 app, you need:
 *  a `main.ts` script to declare and bootstrap your application.
-* a `app.module.ts` to declare all the components of the application and the URL routes declaration. Those routes are internal to the web browser. They are protected by a guard mechanism to avoid unlogged person to access some private pages. The following code declares three routes for the three main features of this application: display the main top navigation page, the customer page to access account, and the itSupport to access the chat bot user interface. The AuthGard assess if the user is known and logged, if not it is routed to the login page.
+* a `app.module.ts` to declare all the components of the application and the URL routes declaration. Those routes are internal to the web browser. They are protected by a guard mechanism to avoid unlogged person to access some private pages. The following code declares four routes for the four main features of this application: display the main top navigation page, the customer page to access account, and the itSupport to access the chat bot user interface. The AuthGard component assesses if the user is known and logged, if not he/she is routed to the login page.
  ```
  const routes: Routes = [
    { path: 'home', component: HomeComponent,canActivate: [AuthGuard]},
@@ -51,16 +53,35 @@ For example the following HTML page uses angular construct to link the button to
 </div>
 ```
 
-the method delegates to the routing based on url
+the method delegates to the angular router with the 'itSupport' url
 ```javascript
 itSupport(){
   this.router.navigate(['itSupport']);
 }
 ```
 ### Conversation bot
-For the conversation front end we are re-using the code approach of the conversation broker of the [Cognitive reference architecture implementation](https://github.com/ibm-cloud-architecture/refarch-cognitive-conversation-broker)
-The same approach, service and component are used to control the user interface and to call the back end. The service does an HTTP POST of the newly entered message. The server code is under `server/routes/features/conversation.js`
+For the conversation front end we are re-using the code approach of the conversation broker of the [Cognitive reference architecture implementation](https://github.com/ibm-cloud-architecture/refarch-cognitive-conversation-broker).
+The same approach, service and component are used to control the user interface and to call the back end. The service does an HTTP POST of the newly entered message:
+```
+export class ConversationService {
+  private convUrl ='/api/c/conversation/';
 
+  constructor(private http: Http) {
+  };
+
+  submitMessage(msg:string,ctx:any): Observable<any>{
+    let user = JSON.parse(sessionStorage.getItem('currentUser'));
+    let bodyString = JSON.stringify(  { text:msg,context:ctx,user:user });
+
+    let headers = new Headers({ 'Content-Type': 'application/json' });
+    let options = new RequestOptions({ headers: headers })
+    return this.http.post(this.convUrl,bodyString,options)
+         .map((res:Response) => res.json())
+  }
+}
+```
+
+So it is interesting to see the message as the watson conversation context and the user basic information.
 
 ### Account component
 When the user selects to access the account information, the routing is going to the account component in `client/app/account` folder use a service to call the nodejs / expressjs REST services as illustrated in the code below:  
@@ -104,11 +125,10 @@ export class AccountComponent implements OnInit {
 }
 ```
 
-
 ## Server code
 The application is using nodejs and expressjs standard code structure. The code is under `server` folder.
 ### Conversation back end.
-The script is in `server/route/features\chatBot.js` and uses the Watson developer cloud library to connect to the remote service. This library encapsulates HTTP calls and simplify the interaction with the public service. The only thing that needs to be done for each chat bot is to add the logic to process the response, for example to get data from a backend, presents user choices in a form of buttons, or call remote service like a rule engine / decision service.
+The script is in `server/route/features/chatBot.js` and uses the Watson developer cloud library to connect to the remote service. This library encapsulates HTTP calls and simplifies the interactions with the public service. The only thing that needs to be done for each chat bot is to add the logic to process the response, for example to get data from a backend, presents user choices in a form of buttons, or call remote service like a rule engine / decision service.
 
 This module exports one function to be called by the API used by the front end. This API is defined in `api.js` as:
 ```javascript
@@ -117,7 +137,7 @@ app.post('/api/c/conversation',isLoggedIn,(req,res) => {
 });
 ```
 
-The `chatBot.chat()` method gets the message and connection parameter and uses the Watson API to transfer the call. The set of if statements are used to perform actions, call services, using the variables set in the Watson Conversation Context. One example is to use the Operational Decision Management rule engine to compute the best product for a given customer situation.
+The `chatBot.chat()` method gets the message and connection parameters and uses the Watson API to transfer the call. The set of if statements are used to perform actions, call services, using the variables set in the Watson Conversation Context. One example is to use the Operational Decision Management rule engine to compute the best product for a given customer situation.
 
 ```javascript
 chat : function(config,req,res){
