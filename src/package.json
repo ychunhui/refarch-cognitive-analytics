@@ -53,14 +53,14 @@
     "session-memory-store": "^0.2.2",
     "watson-developer-cloud": "^3.2.1",
     "webpack": "^3.1.0",
+    "btoa": "",
     "zone.js": "^0.8.4"
   },
   "devDependencies": {
-    "@angular/cli": "^1.6.3",
+    "@angular/cli": "^6.0.1",
     "@angular/compiler-cli": "^5.1.2",
     "@angular/language-service": "^5.1.2",
     "typescript": "~2.4.2",
-    "btoa": "",
     "lite-server": "^2.2.2",
     "@types/node": "~6.0.60",
     "chai": "^4.0.0",
