@@ -104,7 +104,7 @@ That should complete the steps to import the data asset from cloudant. Likewise 
 
 In the previous steps we created datasources, and then imported data assets from each one of them. In this section, we will perform some visualizations to explore the data, and perform simple operations to prepare the data. These steps will be performed using the tool Data Refinery, which is part of the Watson Data Platform.
 
-[See note](CustomerChurnAnalysisCI-bpull.md) of the jupiter notebook exported as markdown file.
+[See note](CustomerChurnAnalysisCI-bpull.md) of the jupyter notebook exported as markdown file.
 
 ## Analytical Model
 
