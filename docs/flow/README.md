@@ -13,7 +13,7 @@ Customer Information is currently planned to run and be maintained on system Z.
 An Extract Transform Load job, or other script running on-premise ingests customer information from DB2 running on mainframe into the DB2 Warehouse running on IBM cloud private on Z. Items [12] in diagram above. (Alternatively, IBM Information Server products can be used to move data). We have also used the Db2 Warehouse 'remote tables' features to remote connect to the DB2 table (see [this note](../data/README.md) for details).
 The current implementation is using a Java based implementation of the customer service, using a micro service approach, see the explanation in [this project](https://github.com/ibm-cloud-architecture/refarch-integration-services)
 
-IBM DSX running on ICP uses the data persisted in DB2 Warehouse (Item [11]) to train a model to predict customer churn (Item [10]). The machine learning / jupyter notebook explanations are in [this note]().
+IBM Watson Studio running on ICP uses the data persisted in DB2 Warehouse (Item [11]) to train a model to predict customer churn (Item [10]). The machine learning / jupyter notebook explanations are in [this note]().
 
 In addition, past customer voice records maintained in a file system is cleansed by a cloud native application running on IBM Cloud Private. The cleansed information is then transcribed using IBM Watson Speech to Text running on IBM Public cloud. The transcribed information is persisted on IBM Cloudant database (Item [3]) running on IBM public cloud.
 
@@ -31,10 +31,10 @@ In this scenario, the following items can be demonstrated:
 
 ![](login.png)
 
+*Note that the screen capture comes from the Case portal App. The current project has another version of the user interface*
 
-Using the customer id from the login, the app invokes the `Get Customer Detail API` from the back end to load customer and account data. There are two implementations for this API. One using direct access to a Java based service, and another using API Connect and Z OS Connect to retrieve the customer information. The loaded information is collected by the App in memory. The figure below highlights the flow:  
+Using the customer id (eddie@email.com) from the login, the app invokes the `Get Customer Detail API` from the back end to load customer and account data. There are two implementations for this API. One using direct access to a Java based service, and another using API Connect and Z OS Connect to retrieve the customer information. The loaded information is collected by the App in memory. The figure below highlights the flow:  
 ![](get-data-flow.png)
-
 
 
 From the home page, user can access his/her account or the chat bot:
@@ -65,3 +65,9 @@ The figure below illustrates this new flow:
 ![](chat-bot-flow.png)
 
 Eddie has a genuine problem and deserves a senior call center rep or a supervisor. Eddie is the type of customer the Telco does not want to loose. The application then asks Eddie for a number and the supervisor calls Eddie and clarifies and resolves Eddies issues.
+
+## Eddie wants to move
+The conversation is running differently now, as Eddie wants to reallocate. He may have an IPTV and ADSL products at home, and the bot is asking for his new zip code to compute a new product recommendation and take into account his existing products, the new area coverage and the churn risk score to apply a discount.
+The flow can be seen here:
+
+<img src="https://github.com/ibm-cloud-architecture/refarch-cognitive-prod-recommendations/blob/master/docs/advisor_1.png" width="600px"></img>

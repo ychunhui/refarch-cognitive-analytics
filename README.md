@@ -6,7 +6,7 @@ The goal of this implementation is to deliver a reference implementation for dat
 
 Modern applications are leveraging a set of capabilities to do a better assessment of customer characteristics and deliver best actions or recommendations. The technologies involved, include artificial intelligence, data governance, ingestion, enrichment, storage, analysis, machine learning, unstructured data classifications, natural language understanding, tone analysis, and hybrid integration....
 
-Update 07/19/18: The solution is not a lab or complete end to end tutorial...yet...
+Update 09/19/18: The solution is not a lab or complete end to end tutorial...yet...
 
 ## Target audience
 * IT Architects who want to understand the components involved and the architecture constraints and design considerations
@@ -20,15 +20,15 @@ Update 07/19/18: The solution is not a lab or complete end to end tutorial...yet
 * Cloud native apps, micro services, can be deployed in public or private cloud, like IBM Cloud private based on Kubernetes and containers
 * Public services like the Watson services can be easily integrated within the solution: Watson Data Platform, Data Science Experience, Tone Analyzer, Watson Assistant
 * API management is used to present a unique API for customer data, standardize for consumers like the webapp, even if the back end is Java based or z Connected based.
+* Product recommendations may be added to the solution to support business decision from a chatbot conversation taking into account the churn scoring risk. See this note to explain how to leverage IBM Operational Decision Management for that.
 
 ## Table of contents
 * [Presentation](#presentation)
 * [Components](#components)
-* [Run](./docs/run.md)
+* [Build and Run](./docs/run.md)
 * [Methodology](#methodology)
 * [Deployment](#deployment)
 * [Implementation detail](./docs/code.md)
-* [Resiliency](#resiliency)
 * [Further readings](#further-readings)
 
 ## Presentation
@@ -86,9 +86,11 @@ At this stage the other components are more used at design time with the involve
 1. The data used by data scientists are persisted in Db2 warehouse. [This note](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/db2warehouse) goes over the creation of the Db2 warehouse release within IBM Cloud private.
 1. **Ingestion** mechanism can move data, for chat transcripts and customer records to the DB2 warehouse. This process can run on demand when Data Scientists need new data to tune the model. It can be implemented with an ETL, with Java program, or using the Db2 Federation capability. [This note](docs/data/README.md) explains what was done to move DB2 customer data to Db2 warehouse.
 1. [Product recommendations based on Operational Decision Management rules](https://github.com/ibm-cloud-architecture/refarch-cognitive-prod-recommendations)
-1. The natural language understanding service is added to support most advanced language processing from the text entered but the end user: entity extraction, relationships, taxonomy, etc. Those elements could be used for scoring services. The language understanding can be fine tuned by using terms and model defined in **Watson Knowledge Studio**.
+
+The natural language understanding service is added to support most advanced language processing from the text entered but the end user: entity extraction, relationships, taxonomy, etc. Those elements could be used for scoring services. The language understanding can be fine tuned by using terms and model defined in **Watson Knowledge Studio**.
 
 The following [sequence diagram](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics/blob/master/docs/seq-diagram.png) explains how the components interact together.
+
 ### Demonstration Script
 As an executable solution, we are presenting the demonstration script in a [separate note.](docs/flow/README.md). You need to have a running environment or being able to access our IBM internal environment for that.
 
@@ -117,12 +119,15 @@ From a pure software engineering implementation, we adopt agile, iterative imple
 * Change the URL of the webapp to point to the API end point, redeploy to ICP.
 
 ### Analytics specifics
-TO BE COMPLETED.
+The [following note](docs/ml/README.md) explains in detail what need to be done to prepare the data, train the model and test its validity.
 
 ## Deployment
-There are multiple possible configurations for the deployment, depending of the use of public and private cloud and the legacy system involved. For the back end we have two options: Z OS with DB2 and Z Connect, and Java based REST micro service and DB2.
+There are multiple possible configurations for the deployment, depending of the use of public and private cloud and the legacy systems involved. For the back end we have two options: Z OS with DB2 and Z Connect, and Java based REST micro service and DB2.
 
-For the machine learning, two options too, 1- DSX on ICP with Spark cluster for model execution or 2- Watson Data Platform on IBM Cloud with Watson ML on IBM Cloud for the scoring service.
+For the machine learning, three options:
+ 1. ICP for Data with Spark cluster for model execution
+ 1. Watson Data Platform on IBM Cloud with Watson ML on IBM Cloud for the scoring service
+ 1. Watson Studio deploy on ICP cluster.
 
 ### Using data service as a Java micro service:
 The first configuration deploys the `customer manager` micro service on IBM Cloud Private, accessing customer and account tables deployed on DB2 servers out side of ICP. API Connect is used to manage customer API product. The Web application, the customer service, and the churn risk scoring are deployed on ICP.
@@ -165,6 +170,7 @@ For Z OS deployment the solution looks like the diagram below, where the data se
 * [Data Science eXperience](https://datascience.ibm.com/)
 * [Other detailed ICP deployment for WebApp](https://github.com/ibm-cloud-architecture/refarch-caseinc-app/blob/master/docs/icp/README.md)
 * [DSX deployment on ICP](https://github.com/ibm-cloud-architecture/refarch-analytics/blob/master/docs/ICP/README.md)
+* [ODM Decision Service for product recommendation](https://github.com/ibm-cloud-architecture/refarch-cognitive-prod-recommendations)
 
 # Contribute
 We welcome your contribution. There are multiple ways to contribute: report bugs and improvement suggestion, improve documentation and contribute code.
@@ -178,7 +184,6 @@ We really value contributions and to maximize the impact of code contributions w
 * One commit per pull request (squash your commits)
 * Always pull the latest changes from upstream and rebase before creating pull request.
 
-
 If you want to contribute, start by using git fork on this repository and then clone your own repository to your local workstation for development purpose. Add the up-stream repository to keep synchronized with the master.
 This project is still under active development, so you might run into [issues](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics/issues)
 
@@ -186,5 +191,6 @@ This project is still under active development, so you might run into [issues](h
 * [Amaresh Rajasekharan](https://www.linkedin.com/in/amaresh-rajasekharan/)
 * [Sandra Tucker](https://www.linkedin.com/in/sandraltucker/)
 * [Sunil Dube](https://www.linkedin.com/in/sunil-dube-b861861/)
-* [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/) - 
+* [Zach Silverstein](https://www.linkedin.com/in/zsilverstein/)
+* [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/) -
 Please [contact me](mailto:boyerje@us.ibm.com) for any questions.

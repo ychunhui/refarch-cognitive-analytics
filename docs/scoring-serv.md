@@ -4,7 +4,7 @@ We have tried two deployment approaches:
 * Use Sparks in ICP and deploy it as a service
 
 ## Publishing the model
-In the Jupyter notebook it is possible to persist the model. The service URL, username and password are the one for the Watson Machine Learning service:
+In the Jupyter notebook it is possible to persist the model. The service URL, username and password are the one for the Watson Machine Learning service on IBM Cloud:
 
 ```python
 from repository.mlrepositoryclient import MLRepositoryClient
@@ -53,9 +53,8 @@ df_customer_transactions.show(5)
 df_customer_transactions.printSchema()
 ```
 
-Then the process is the same for doing data cleansing, visualization.
+Then the process is the same for doing data cleansing, visualization...
 To persist the mode the client is the same, but the URL does not need to be specified as it will be saved to the ml repository inside DSX running in ICP.
-
 
 ```python
 from repository.mlrepositoryclient import MLRepositoryClient
