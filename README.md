@@ -8,12 +8,14 @@ Modern applications are leveraging a set of capabilities to do a better assessme
 
 Update 09/19/18: The solution is not a lab or complete end to end tutorial...yet...
 
-## Target audience
+## Target audiences
+
 * IT Architects who want to understand the components involved and the architecture constraints and design considerations
 * Developers who want to get starting code, and educate themselves on the related technologies
 * Data Scientists who want to complement machine learning with cognitive output like classification  
 
 ## Key points
+
 * Data scientists need different source of data, structured from traditional SQL based database (e.g. the customers and accounts data) and unstructured output of new cognitive services.
 * Data Scientists work hand by hand with application developers to quickly deliver solution to the business
 * Data access layer to traditional relational data should be done with a micro service approach exposing RESTful API or using modern z OS Connect application.
@@ -23,19 +25,24 @@ Update 09/19/18: The solution is not a lab or complete end to end tutorial...yet
 * Product recommendations may be added to the solution to support business decision from a chatbot conversation taking into account the churn scoring risk. See this note to explain how to leverage IBM Operational Decision Management for that.
 
 ## Table of contents
+
 * [Presentation](#presentation)
 * [Components](#components)
 * [Build and Run](./docs/run.md)
 * [Methodology](#methodology)
 * [Deployment](#deployment)
-* [Implementation detail](./docs/code.md)
+* [Implementation details](./docs/code.md)
 * [Further readings](#further-readings)
+* [Contribute](#contribute)
 
 ## Presentation
+
 ### An unhappy customer
+
 Eddie is an existing Green Telco Inc customer living in Orlando Fl.  He has been using the services provided by the Green Telco for the last 2 years. Currently, he is not under any contract.  Eddie signed for a new phone which was "buy one get one" free bundle. He bought one of the phone with cash and he put the other phone on a monthly plan. For Eddie to get the second phone free he has to submit the receipt to the Green Telco to get an equivalent value of the phone as a credit card. Eddie was traveling to conferences in Madrid and in Bangkok so he also signed up for international text and data service.  
 
 So he owns two phones:  
+
 * Sam Milky Way Phone 1   $750   paid in full with cash
 * Sam Milky Way Phone 2   $750   on a monthly plan of $30
 
@@ -62,6 +69,7 @@ Eddie walks in the store and his problem was resolved. Once, he got the refund i
 The customer churn service helped Eddie to remain as a customer for the Green Telco.
 
 ### System Context diagram
+
 The following diagram illustrates the system context of the application, including analytics model preparation and run time execution.
 
 ![](docs/syst-ctx-2.png)
@@ -69,6 +77,7 @@ The following diagram illustrates the system context of the application, includi
 This repository presents best practices to deploy such solution on public and private cloud, implements the webapp deployable in public or private cloud, and deliver example of data sets.
 
 ## Components
+
 From above figure left to right the components involved are:
 1. **Web application** to offer a set of services for the end user to access: from this user interface the end user, customer of Green Telco, can access his account, pays his bill (not implemented) and uses the chat bot user interface to get support help. [This note](docs/code.md) presents the implementation details and how to deploy it on ICP.
 1. The account informations are loaded from the back end systems (7) via a customer management micro service (8) and an API product defined (9) in API Connect. The call in (2) is RESTful API and documented in [this note](docs/code.md#account-component)
@@ -89,16 +98,21 @@ At this stage the other components are more used at design time with the involve
 
 The natural language understanding service is added to support most advanced language processing from the text entered but the end user: entity extraction, relationships, taxonomy, etc. Those elements could be used for scoring services. The language understanding can be fine tuned by using terms and model defined in **Watson Knowledge Studio**.
 
-The following [sequence diagram](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics/blob/master/docs/seq-diagram.png) explains how the components interact together.
+The following sequence diagram explains how the components interact together.
+
+![sequence diagram](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics/blob/master/docs/seq-diagram.png)
 
 ### Demonstration Script
+
 As an executable solution, we are presenting the demonstration script in a [separate note.](docs/flow/README.md). You need to have a running environment or being able to access our IBM internal environment for that.
 
 ## Methodology
+
 The following diagram illustrates the artificial intelligence / cognitive capabilities developers can integrate in their business application. data scientists can leverage to develop their analytics models, and the data tasks that need to be perform on private, public or licensed dataset.
 ![](docs/cognitive-data-capabilities.png)
 
 ### Micro service development
+
 From a pure software engineering implementation, we adopt agile, iterative implementation: the following lower level tasks were done:
 * Develop the data model for the customer, accounts, device as java classes...
 * Develop the Java REST API with resources for customer, account and products, and JAXRS annotations
@@ -119,9 +133,11 @@ From a pure software engineering implementation, we adopt agile, iterative imple
 * Change the URL of the webapp to point to the API end point, redeploy to ICP.
 
 ### Analytics specifics
+
 The [following note](docs/ml/README.md) explains in detail what need to be done to prepare the data, train the model and test its validity.
 
 ## Deployment
+
 There are multiple possible configurations for the deployment, depending of the use of public and private cloud and the legacy systems involved. For the back end we have two options: Z OS with DB2 and Z Connect, and Java based REST micro service and DB2.
 
 For the machine learning, three options:
@@ -130,6 +146,7 @@ For the machine learning, three options:
  1. Watson Studio deploy on ICP cluster.
 
 ### Using data service as a Java micro service:
+
 The first configuration deploys the `customer manager` micro service on IBM Cloud Private, accessing customer and account tables deployed on DB2 servers out side of ICP. API Connect is used to manage customer API product. The Web application, the customer service, and the churn risk scoring are deployed on ICP.
 
 ![](docs/deployment-cfg1.png)
@@ -142,6 +159,7 @@ The first configuration deploys the `customer manager` micro service on IBM Clou
 * The datasource to persist the conversation data is Cloudant DB on Public Cloud.
 
 ### The ICP run time clustering
+
 The cluster topology with some of the major ICP and solution components will look like the following diagram:
 
 ![](docs/icp-compo.png)
@@ -152,6 +170,7 @@ The spark cluster, master, spawner... are deployments inside ICP and installed v
 ![](docs/icp-dsx-spark.png)
 
 ### Using Watson Data Platform
+
 As an alternate to use DSX on ICP to develop the machine learning model, Data Scientist can use Watson Data platform to gather the data from multiple datasources like Amazon S3, CloudantDB, and from transactional data, persist in public object store and deploy the model once trained to Watson Machine learning.
 
 ![](docs/deployment-cfg3.png)
@@ -159,6 +178,7 @@ As an alternate to use DSX on ICP to develop the machine learning model, Data Sc
 See [this note](docs/ml/README.md) for detail about the implementation of the analytic model, and the see the `WMLChurnServiceClient.js` code for the integration part.
 
 ### Using Data Service as Z Connect service
+
 For Z OS deployment the solution looks like the diagram below, where the data service and DB2 are running on Z OS.
 
 ![](docs/Z/deployment-cfg2.png)
@@ -166,6 +186,7 @@ For Z OS deployment the solution looks like the diagram below, where the data se
 [This note](docs/Z/README.md) details the Z Connect implementation.
 
 # Further readings
+
 * [Data Analysis using Spark on zOS and Jupyter Notebooks](https://github.com/IBM/Spark-on-zOS)
 * [Data Science eXperience](https://datascience.ibm.com/)
 * [Other detailed ICP deployment for WebApp](https://github.com/ibm-cloud-architecture/refarch-caseinc-app/blob/master/docs/icp/README.md)
@@ -173,8 +194,10 @@ For Z OS deployment the solution looks like the diagram below, where the data se
 * [ODM Decision Service for product recommendation](https://github.com/ibm-cloud-architecture/refarch-cognitive-prod-recommendations)
 
 # Contribute
+
 We welcome your contribution. There are multiple ways to contribute: report bugs and improvement suggestion, improve documentation and contribute code.
-We really value contributions and to maximize the impact of code contributions we request that any contributions follow these guidelines
+We really value contributions and to maximize the impact of code contributions we request that any contributions follow these guidelines:
+
 * Please ensure you follow the coding standard and code formatting used throughout the existing code base
 * All new features must be accompanied by associated tests
 * Make sure all tests pass locally before submitting a pull request
@@ -188,9 +211,11 @@ If you want to contribute, start by using git fork on this repository and then c
 This project is still under active development, so you might run into [issues](https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics/issues)
 
 ## Contributors
+
 * [Amaresh Rajasekharan](https://www.linkedin.com/in/amaresh-rajasekharan/)
 * [Sandra Tucker](https://www.linkedin.com/in/sandraltucker/)
 * [Sunil Dube](https://www.linkedin.com/in/sunil-dube-b861861/)
 * [Zach Silverstein](https://www.linkedin.com/in/zsilverstein/)
 * [Jerome Boyer](https://www.linkedin.com/in/jeromeboyer/) -
+
 Please [contact me](mailto:boyerje@us.ibm.com) for any questions.
