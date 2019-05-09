@@ -68,6 +68,7 @@ Eddie has a genuine problem and deserves a senior call center rep or a superviso
 
 ## Eddie wants to move
 The conversation is running differently now, as Eddie wants to reallocate. He may have an IPTV and ADSL products at home, and the bot is asking for his new zip code to compute a new product recommendation and take into account his existing products, the new area coverage and the churn risk score to apply a discount.
-The flow can be seen here:
 
-<img src="https://github.com/ibm-cloud-architecture/refarch-cognitive-prod-recommendations/blob/master/docs/advisor_1.png" width="600px"></img>
+The dialog flow looks like below:
+
+![](advisor_1.png)
