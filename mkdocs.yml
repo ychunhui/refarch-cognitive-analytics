@@ -1,0 +1,16 @@
+site_name: Customer analysis with cognitive and analytics in hybrid cloud
+repo_url: https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics
+nav:
+  - Welcome: index.md
+  - Methodology: method/readme.md
+  - Business Problem: 
+    - Presentation: businessproblem.md
+    - Demonstration: ./flow/README.md
+  - Design: 
+    - Design considerations: design/readme.md
+    - Implementation details: design/code.md
+  - Deployments: run.md
+
+theme: 
+  name: material
+extra_css: ["extra.css"]
