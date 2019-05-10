@@ -1,12 +1,15 @@
 # Watson Tone Analyzer integration
+
 For integrating Watson Tone Analyzer inside your application flow, you need to create a Watson Tone Analyzer service, get the credential and develop a client code to connect to your application flow.
 
 ## 1- Create the Watson Tone Analyzer service
+
 To create the service, login to IBM Cloud and navigate the catalog to Watson category, under `Platform`, select Tone Analyzer, select the region, organization and space to attach the service to, and then `create`
 
 ![](catalog-view.png)
 
 ## 2- Access the credentials
+
 Select your newly created service and go to the Service credentials to define new configuration for remote connect to the service:
 
 ![](ta-new-credential.png)
@@ -23,6 +26,7 @@ Copy those credential into the `src/server/config/config.json` file and into the
 ```
 
 ## 3- Client code
+
 The client code is already coded and can be seen in `src/server/routes/features/toneAnalyzer.js` it basically uses the Watson developer client modules to access the service. The only thing to consider is what are the utterances. In our case the last sentence entered by the end user is the unique utterance. The alternate choice is to accumulate the last n sentences and add them in the array of utterances. So the service will use more content to assess the global tone of the user.
 
 ```javascript
@@ -39,6 +43,7 @@ analyzeSentence : function(config,message,res){
 ```
 
 ## Integration
+
 As explained in the [code explanation note](code.md) when the designer of the conversation dialog flow decides a speciic conversation subject / intent is becoming sensitive, he may set parameters in the conversation context to trigger calls to tone analyzer for any sub sequent interactions.
 
 The conversation context boolean `toneAnalyzer` is used for that, and set to true, so any new sentence sent by the end user will be routed to Watson Tone Analyzer.
