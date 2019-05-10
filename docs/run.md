@@ -1,26 +1,6 @@
 # Run the different components of the solution
 
 
-### For the Web App built using nodejs and expressjs
-
-* For this application you need to have [nodejs](https://nodejs.org/en/) installed on your computer with the [npm](https://www.npmjs.com/) installer tool.
-* Clone this current repository, or if you want to work on the code, fork it in your own github repository and then clone your forked repository on your local computer. If you used the `fork-repos.sh` script from the [Data & Analytics reference implementation solution](https://github.com/ibm-cloud-architecture/refarch-analytics) main repository, you are already set.
-
-```
-cd refarch-cognitive-analytics/src
-npm install
-```
-* You need to install Angular 4 command line interface if you do not have it yet: see the [cli.angular.io website](http://cli.angular.io) with the following command
-
- ```
- sudo  npm install -g @angular/cli
- ```
- on Mac, as a global install you need to be `root` user or a "sudoer" user.
-* If you want to tune the server code, you need to install [nodemon](https://nodemon.io/) to support server code change without stopping the server. The installation is done with `npm`:
-```
-sudo npm install -g nodemon
-```
-
 ### For Watson Conversation service
 
 Create the service in IBM Cloud and get the credentials, update the configuration file (config.json and values.yaml) for the webapp to access the conversation service. [See this note about implementation](./wcs/README.md)
@@ -29,28 +9,7 @@ Create the service in IBM Cloud and get the credentials, update the configuratio
 
 Create the service in IBM Cloud and get the credentials. See also [this note](./design/w-tone-analyzer.md) for more details.
 
-## Build
-
-### For the Web App
-
-To build the angular 4 components run the commands under the `src` folder:
-```
-$ ng build
-or
-$ npm run build
-```
-When involving a continuous integration using Jenkins, the jenkins file executes the script in the good order:
-```
-stage('build') {
-    steps {
-        sh 'build.sh'
-    }
-}
-```
-When compiling the angular typescripts the javascript code generated is saved under `dist` folder. It will be packaged when a docker image is built.
-
-We have added a build.sh shell script which uses a version number (0.0.6) to build the docker image with good tagging and modify the helm chart with the good tag reference.
-
+#
 ### Jenkins pipeline
 
 We deployed a Jenkins server on IBM Cloud Private following the instructions described [here](https://github.com/ibm-cloud-architecture/refarch-integration/tree/master/docs/devops#jenkins-on-icp), with a PVC named `jenkins-home` under the greencompute namespace and the commands:
