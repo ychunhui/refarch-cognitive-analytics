@@ -1,6 +1,8 @@
 # Data Ingestion
+
 For data ingestion we have multiple choices to move data from DB2 to Db2 warehouse, Cloudant to Db2 warehouse. The appraoch will depend of the number of records to load, the frequency of data movement, and the overall size. This data movement is motivated by the Data Scientist work to select the best algorithm to classify customers into churn or not.
 For this solution we have used the following approach
+
 * churn settings were done by marketing group on existing 3000 customer records.
 * To develop in parallel the analytics model and database, microservice,... we used csv files to share the data, but in real life the data are in the DB2 CUSTDB instance,
 * We stage the data to Db2 warehouse on ICP, and let the Data science uses this data source from his Jupyter notebook within DSX
@@ -8,6 +10,7 @@ For this solution we have used the following approach
 * To move data we used the Db2 remote table feature to load the same data from Db2 and then do data preparation to customeraccount unique table used by the ML training and testing
 
 ## Loading the data using remote table
+
 Connect to the DB2 warehouse running on ICP. Normally is by using the proxy server with the mapped port number. For example our deployment is https://172.16.40.131:31107/console. (If you want to know more on how we configure Db2 warehouse helm release see [this note](https://github.com/ibm-cloud-architecture/refarch-analytics/blob/master/docs/db2warehouse/README.md))).
 
 Recall that to get the port number you can execute the command:
@@ -58,4 +61,5 @@ Please note that if a large number of rows was involved this insert could easily
 ![](customeraccount.png)
 
 # Compendium
+
 * As we used remote table in this solution you can deep dive into *federated systems* from the product documentation: https://www.ibm.com/support/knowledgecenter/SS6NHC/com.ibm.data.fluidquery.doc/topics/cfpint01.html

@@ -1,23 +1,12 @@
 # Run the different components of the solution
-This section addresses how to run all the components of the solution. It is not a tutorial and you need to have hands on experience on IBM Cloud Private and IBM Cloud. You also need access to Virtual Machines to be able to run the solution.
 
-## Pre-Requisites
-### Server environment
-*If you work for IBM, please contact us so you can access our labs via VPN.*
-
-If you want to setup the environment on your own you will need 4 computers/ VMs:
-* an ICP cluster with at the bare minimum of 3 VMs: one master node, one proxy and one worker node. This is for the run time. For the analytics part, using DSX, you can use the IBM Cloud service or use the `DSX developer chart` from the ICP catalog, and use your ICP instance.
-* One VM for DB2 community edition, Liberty
-In the close future we plan to deliver a Vagrant file to get a unique virtual environment with DB2 dev, Liberty, and you can use [this vagrant](https://github.com/IBM/deploy-ibm-cloud-private) file for ICP.
-
-In production you will use a dedicated cluster with DSX local deployed on it. This is out environment as explained [in this note](https://github.com/ibm-cloud-architecture/refarch-analytics/tree/master/docs/ICP/README.md)
 
 ### For the Web App built using nodejs and expressjs
+
 * For this application you need to have [nodejs](https://nodejs.org/en/) installed on your computer with the [npm](https://www.npmjs.com/) installer tool.
 * Clone this current repository, or if you want to work on the code, fork it in your own github repository and then clone your forked repository on your local computer. If you used the `fork-repos.sh` script from the [Data & Analytics reference implementation solution](https://github.com/ibm-cloud-architecture/refarch-analytics) main repository, you are already set.
 
 ```
-git clone https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics
 cd refarch-cognitive-analytics/src
 npm install
 ```
@@ -31,14 +20,19 @@ npm install
 ```
 sudo npm install -g nodemon
 ```
+
 ### For Watson Conversation service
+
 Create the service in IBM Cloud and get the credentials, update the configuration file (config.json and values.yaml) for the webapp to access the conversation service. [See this note about implementation](./wcs/README.md)
 
 ### For Tone analyzer
-Create the service in IBM Cloud and get the credentials. See also [this note](w-tone-analyzer.md) for more details.
+
+Create the service in IBM Cloud and get the credentials. See also [this note](./design/w-tone-analyzer.md) for more details.
 
 ## Build
+
 ### For the Web App
+
 To build the angular 4 components run the commands under the `src` folder:
 ```
 $ ng build
@@ -58,6 +52,7 @@ When compiling the angular typescripts the javascript code generated is saved un
 We have added a build.sh shell script which uses a version number (0.0.6) to build the docker image with good tagging and modify the helm chart with the good tag reference.
 
 ### Jenkins pipeline
+
 We deployed a Jenkins server on IBM Cloud Private following the instructions described [here](https://github.com/ibm-cloud-architecture/refarch-integration/tree/master/docs/devops#jenkins-on-icp), with a PVC named `jenkins-home` under the greencompute namespace and the commands:
 ```
 $ helm install --name greenjenkins --set Persistence.ExistingClaim=jenkins-home --set Master.ImageTag=2.67 stable/jenkins --namespace greencompute
@@ -78,6 +73,7 @@ The pipeline is created. You can manually start the build job that runs the pipe
 
 
 ## Run
+
 ### Run the web application locally
 
 To start the application using node monitoring tool use the command:
@@ -97,9 +93,10 @@ The trace should display a message like below with the url to use
 
 Point your web browser to the url: [http://localhost:3001](http://localhost:3001) to get access to the user interface of the home page.
 
-The demonstration script is described in this [note](docs/flow/README.md)
+The demonstration script is described in this [note](./flow/README.md)
 
 ### Run web app on IBM Cloud Private
+
 The application can be deployed with `helm install`. Once the docker image is built, you need to remote connect to the master node where the docker private repository resides, and push the image to the repo:
 ```
 $ docker build -t ibmcase/greenapp .
@@ -109,6 +106,7 @@ $ docker push greencluster.icp:8500/greencompute/greenapp:v0.0.1
 ```
 
 #### Deploy the release using the helm
+
 First you need to rename the file `values-tmpl.yaml` to `values.yaml` and set the parameters as the config.json. We are using the mechanism of config map to externalize the configuration as defined by the `config.json`. While using cloud foundry or pure local nodejs deployment this file is read from the filesystem by the server.js. But with kubernetes pods the best practice is to export this configuration into `ConfigMap`.
 To do so we need to create a new template: `templates/configmap.yaml`. This file uses the same structure as the `config.json` file:
 
@@ -161,6 +159,7 @@ data:
 As you can see the real values are set in the `values.yaml` file. This is an implementation decision to externalize all values in this file, we could have set the value directly in the template as they are not used anywhere else.
 
 ### Modify deployment.yaml
+
 To 'inject' the configuration from the `configMap` to the server nodejs app, the trick is to specify that the `config.json` file is coming from a logical volume:
 
 In the deployment.yaml we add a volumeMount point to the container specification:
@@ -209,6 +208,7 @@ $ kubectl logs <pod name> --namespace greencompute
 Once deployed and started the Web application can be seen at the URL: http://greenapp.green.case
 
 ### Run the Jupyter notebook
+
 The main root project for green compute includes a dockerfile to get all the interesting components you may want to run to execute and develop Jupyter notebooks on your own. If you use `docker build -t pysparktf .`, you should get the image with python, sklearn, all spark python modules and even Tensorflow.
 
 ```

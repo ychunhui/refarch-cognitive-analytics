@@ -22,7 +22,7 @@ The solution involves three datasets from the analytics standpoint, as outlined 
 2. **Customer campaign results**: This dataset includes the results of a marketing campaign conducted by a third part marketing firm for the Telco customers. This is intended to capture the customer's preferred device or feature (such as large display, Android phone etc.) and usage related aspects such as if the customer has multiple phone numbers, and the number of SMS text messages the customer exchanges with his contacts. The notion is, the usage model and preferences, could have a strong influence in any given customer's preference to stay with the provider or leave. As per the scenario in this solution, this data is stored in the data servers of the marketing firm, which is on a third party cloud. The marketing firm makes this dataset available on Amazon S3.
 3. **Call center notes**: This dataset contains a short, summary style description of customer's complaint, two or three important keywords showing the device, feature, and the problem, and the sentiment shown by the customer. In some cases customers simply ask questions such as where the nearest store is. These kinds of entries may have no value for sentiments. These need to be fixed before one can perform analytics. This dataset resides in Cloudant on IBM cloud. Since each customer complaint is a service ticket, which essentially is a document, this data is stored in Cloudant.
 
-The steps will be mostly aligned with CRISP-DM methodology, but with the main focus on the data preparation and analytics.
+The steps will be mostly aligned with CRISP-DM methodology, focusing on the data preparation and analytics.
 
 ## Prerequisites
 
@@ -104,7 +104,7 @@ That should complete the steps to import the data asset from cloudant. Likewise 
 
 In the previous steps we created datasources, and then imported data assets from each one of them. In this section, we will perform some visualizations to explore the data, and perform simple operations to prepare the data. These steps will be performed using the tool Data Refinery, which is part of the Watson Data Platform.
 
-[See note](CustomerChurnAnalysisCI-bpull.md) of the jupyter notebook exported as markdown file.
+[See note](./CustomerChurnAnalysisCI-bpull.md) of the jupyter notebook exported as markdown file.
 
 ## Analytical Model
 

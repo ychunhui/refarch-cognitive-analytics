@@ -1,9 +1,12 @@
 # Churn Scoring Service
+
 We have tried two deployment approaches:
-* Use Watson Machine Learning Service to deploy the model defined in Data Science Experiences, trained with Apache Sparks. [This note](ml/README.md) goes over how to use Watson Data Platform to develop the model and publish it.  
+
+* Use Watson Machine Learning Service to deploy the model defined in Data Science Experiences, trained with Apache Sparks. [This note](../ml/README.md) goes over how to use Watson Data Platform to develop the model and publish it.  
 * Use Sparks in ICP and deploy it as a service
 
 ## Publishing the model
+
 In the Jupyter notebook it is possible to persist the model. The service URL, username and password are the one for the Watson Machine Learning service on IBM Cloud:
 
 ```python
@@ -16,7 +19,8 @@ model_artifact = MLRepositoryArtifact(model, training_data=train, name="Customer
 saved_model = ml_repository_client.models.save(model_artifact)
 ```
 
-Once deployed the service can be accessed via API. The code is in server/routes/features/WMLChurnServiceClient.js. The approach is to
+Once deployed the service can be accessed via API. The code is in server/routes/features/WMLChurnServiceClient.js. The approach is to:
+
 * Get an authorization token
 * Prepare the data for the service: customer record, tone analysis results...
 * Do a POST on the deployed scoring service. The parameters come from a config file or when deployed in kubernetes cluster from a configMap.
@@ -35,7 +39,8 @@ request({url:scoring_url,
     })
 ```
 
-## ICP DSX
+## ICP 
+
 For the ICP DSX work, the Data Scientists is using the data centralized in Db2 Warehouse. The notebook is under src/dsx folder, named `CustomerChurnAnalysisDSXICP.ipynb`.
 
 Loading data from DB2 tables, you need the core utils module, and then using the Spark Session to load data.

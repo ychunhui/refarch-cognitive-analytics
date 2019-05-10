@@ -6,50 +6,31 @@ The goal of this implementation is to deliver a reference implementation for dat
 
 For better reading experience go to [the book view.](http://ibm-cloud-architecture.github.io/refarch-cognitive-analytics)
 
+## Reuse this solution
 
+We recommend git forking this project, clone it with `git clone https://github.com/ibm-cloud-architecture/refarch-cognitive-analytics` and then runs the following command to clone all the related repositories involved in this solution:
 
-## Table of contents
+```shell
+./scripts/clone.sh
+```
 
-* [Components](#components)
-* [Build and Run](./docs/run.md)
-* [Methodology](#methodology)
-* [Deployment](#deployment)
+Once done you can read the content of this repository as [a book](http://ibm-cloud-architecture.github.io/refarch-cognitive-analytics), or try our step by step [labs](docs/labs.md).
 
+The main goal of this solution is to run in hybrid cloud, reusinf services from public cloud, private cloud and on-premise database servers. 
 
+![](docs/deployment-cfg1.png)
 
+* The DB2 instance runs on separate on-premise servers, to illustrate the use case of keeping existing infrastructure investments.
+* `customer manager` microservice runs on IBM Cloud Private, accessing customer and account tables deployed on DB2 servers outside of ICP.
+* Watson Cognitive services are on IBM Cloud, public offering,
+* The datasource to persist the conversation data is Cloudant DB on Public Cloud.
 
-## Deployment
-
-There are multiple possible configurations for the deployment, depending of the use of public and private cloud and the legacy systems involved. For the back end we have two options: Z OS with DB2 and Z Connect, and Java based REST micro service and DB2.
+For the back end we have two options: Z OS with DB2 and Z Connect, and Java based REST micro service and DB2.
 
 For the machine learning, three options:
  1. ICP for Data with Spark cluster for model execution
  1. Watson Data Platform on IBM Cloud with Watson ML on IBM Cloud for the scoring service
- 1. Watson Studio deploy on ICP cluster.
-
-### Using data service as a Java micro service:
-
-The first configuration deploys the `customer manager` micro service on IBM Cloud Private, accessing customer and account tables deployed on DB2 servers out side of ICP. API Connect is used to manage customer API product. The Web application, the customer service, and the churn risk scoring are deployed on ICP.
-
-![](docs/deployment-cfg1.png)
-
-* As machine learning discovery tasks running on Spark cluster are development activities and consume a lot of resources we propose to separate the DSX, Db2 warehouse and Spark cluster in its separate ICP instance. The decision to use separate cluster is really linked to the size of the dataset to process, and the execution frequency: with dedicated team of Data Scientist, with terra bytes of data.
-* The runtime for cloud native applications and micro services is an ICP with HA and DR support.
-* The scoring service is deployed on a Spark Cluster running on ICP runtime cluster.
-* The DB2 instance runs on separate on-premise servers, to illustrate the use case of keeping existing infrastructure investments.
-* Watson Cognitive services are on IBM Cloud, public offering,
-* The datasource to persist the conversation data is Cloudant DB on Public Cloud.
-
-### The ICP run time clustering
-
-The cluster topology with some of the major ICP and solution components will look like the following diagram:
-
-![](docs/icp-compo.png)
-
-The dashed lines highlight the deployment concept of k8s. The Db2 warehouse is using external `Glusterfs` cluster for persisting data via the persistent volumes and persistent volume claim.
-
-The spark cluster, master, spawner... are deployments inside ICP and installed via DSX Local.  
-![](docs/icp-dsx-spark.png)
+ 1. Watson Studio deployed on ICP cluster.
 
 ### Using Watson Data Platform
 
@@ -58,16 +39,6 @@ As an alternate to use DSX on ICP to develop the machine learning model, Data Sc
 ![](docs/deployment-cfg3.png)
 
 See [this note](docs/ml/README.md) for detail about the implementation of the analytic model, and the see the `WMLChurnServiceClient.js` code for the integration part.
-
-### Using Data Service as Z Connect service
-
-For Z OS deployment the solution looks like the diagram below, where the data service and DB2 are running on Z OS.
-
-![](docs/Z/deployment-cfg2.png)
-
-[This note](docs/Z/README.md) details the Z Connect implementation.
-
-
 
 ### Building this booklet locally
 

@@ -27,7 +27,7 @@ docker tag ibmcase/greenapp greencluster.icp:8500/greencompute/greencompute-telc
 
 docker images
 ## modify helm version
-cd ../chart/green-customerapp
+cd ../chart/green-telco-app
 a=$(grep 'version' Chart.yaml)
 sed -i -e 's/"$a"/version: "$v"/g' Chart.yaml
 ## same for the tag in values.yaml

@@ -1,6 +1,7 @@
 
 # compiled output
 src/dist
+site/
 /tmp
 src/build
 src/server/config/config.json
